@@ -1,0 +1,21 @@
+{
+  "LOGIN": {
+    "EMPLOYEE_MANAGEMENT": "إدارة الموظفين",
+    "STREAMLINE_TITLE": "قم بتبسيط عمليات فريقك",
+    "STREAMLINE_DESC": "راقب المشاريع، وادعم فريقك، واحتفظ بكل شيء في مكان واحد مع رؤى تظهر في الوقت المناسب.",
+    "WORK_TOGETHER": "لنعمل معًا",
+    "WELCOME_BACK": "مرحبًا بعودتك! أدخل بياناتك للمتابعة.",
+    "TEST_ACCOUNTS": "حسابات تجريبية لتسجيل الدخول",
+    "SELECT_TEST_ACCOUNT": "اختر حسابًا تجريبيًا",
+    "CLEAR_SELECTION": "مسح الاختيار",
+    "USERNAME": "اسم المستخدم",
+    "ENTER_USERNAME": "أدخل اسم المستخدم",
+    "PASSWORD": "كلمة المرور",
+    "ENTER_PASSWORD": "أدخل كلمة المرور",
+    "LOGIN_BUTTON": "تسجيل الدخول",
+    "AGREE_TEXT": "بالمتابعة فإنك توافق على",
+    "TERMS": "الشروط",
+    "AND": "و",
+    "PRIVACY_POLICY": "سياسة الخصوصية"
+  }
+}
