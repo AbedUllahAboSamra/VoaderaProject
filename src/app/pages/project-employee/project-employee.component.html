@@ -14,12 +14,12 @@
           id="assignment-search"
           type="search"
           placeholder="Search project, employee, role or date…"
-          class="w-full rounded-2xl border border-white/15 bg-white/5 px-10 py-3 text-sm text-white/80 shadow-inner shadow-slate-950/30 outline-none transition focus:border-indigo-400/60 focus:bg-white/10 focus:text-white focus:shadow-[0_10px_30px_rgba(99,102,241,0.25)]"
+          class="w-full rounded-2xl border border-white/15 bg-white/5 px-10 py-3 text-sm text-white shadow-inner shadow-slate-950/30 outline-none transition focus:border-indigo-400/60 focus:bg-white/10 focus:text-white focus:shadow-[0_10px_30px_rgba(99,102,241,0.25)]"
         />
       </div>
     </div>
     <div
-      class="flex flex-wrap items-center justify-end gap-3 text-xs text-white/60"
+      class="flex flex-wrap items-center justify-end gap-3 text-xs text-white"
     >
       <span
         class="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-medium"
@@ -57,11 +57,15 @@
         Connect team members to initiatives
       </p>
     </header>
-    <form (ngSubmit)="onSave()" class="grid gap-4 md:grid-cols-2" [formGroup]="taskEmployeeForm">
+    <form
+      (ngSubmit)="onSave()"
+      class="grid gap-4 md:grid-cols-2"
+      [formGroup]="taskEmployeeForm"
+    >
       <div>
         <label
           for="create-project"
-          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/60"
+          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white"
           >Project</label
         >
         <select
@@ -78,7 +82,7 @@
       <div>
         <label
           for="create-employee"
-          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/60"
+          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white"
           >Team member</label
         >
         <select
@@ -95,7 +99,7 @@
       <div>
         <label
           for="create-date"
-          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/60"
+          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white"
           >Assigned date</label
         >
         <input
@@ -108,7 +112,7 @@
       <div>
         <label
           for="create-role"
-          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/60"
+          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white"
           >Role</label
         >
         <input
@@ -122,7 +126,7 @@
       <div>
         <label
           for="create-allocation"
-          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/60"
+          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white"
           >Allocation (%)</label
         >
         <input
@@ -146,7 +150,7 @@
         </p>
       </div>
       <div class="flex items-center gap-3 pt-2">
-        <span class="text-xs uppercase tracking-[0.35em] text-white/60"
+        <span class="text-xs uppercase tracking-[0.35em] text-white"
           >Active</span
         >
         <button
@@ -175,7 +179,7 @@
       <div class="md:col-span-2">
         <label
           for="create-notes"
-          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/60"
+          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white"
           >Notes (Optional)</label
         >
         <textarea
@@ -208,7 +212,7 @@
     >
       <button
         type="button"
-        class="flex w-full items-center justify-between gap-4 px-6 py-5 text-left text-sm text-white/80 transition hover:bg-white/5"
+        class="flex w-full items-center justify-between gap-4 px-6 py-5 text-left text-sm text-white transition hover:bg-white/5"
         (click)="toggleExpand(item.empProjectId)"
       >
         <div class="flex flex-1 flex-col gap-1 md:flex-row md:items-center">
@@ -229,7 +233,7 @@
           >
             {{ isActive(item.isActive) ? 'Active' : 'Inactive' }}
           </span>
-          <span class="text-xs text-white/60">
+          <span class="text-xs text-white">
             {{ formattedDate(item.assignedDate) }}
           </span>
           <span
@@ -451,7 +455,7 @@
               <p class="text-xs uppercase tracking-[0.3em] text-white/45">
                 Notes
               </p>
-              <p class="mt-2 text-sm leading-relaxed text-white/80 whitespace-pre-wrap">
+              <p class="mt-2 text-sm leading-relaxed text-white whitespace-pre-wrap">
                 {{ item.notes }}
               </p>
             </div>
@@ -478,7 +482,7 @@
 
     <!-- <div
       *ngIf="!filteredAssignments().length"
-      class="rounded-[26px] border border-dashed border-white/15 bg-white/5/60 px-6 py-12 text-center text-sm text-white/60 backdrop-blur-lg"
+      class="rounded-[26px] border border-dashed border-white/15 bg-white/5/60 px-6 py-12 text-center text-sm text-white backdrop-blur-lg"
     >
       No assignments match your filters.
     </div> -->

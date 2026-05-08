@@ -3,10 +3,12 @@
   <div
     class="rounded-[26px] border border-white/10 bg-white/5/80 p-6 shadow-[0_35px_90px_rgba(9,14,33,0.55)] backdrop-blur-xl"
   >
-    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div
+      class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+    >
       <div>
         <h1 class="text-2xl font-bold text-white">Calendar & Timeline</h1>
-        <p class="mt-1 text-sm text-white/60">
+        <p class="mt-1 text-sm text-white">
           View project milestones, timelines, and due date reminders
         </p>
       </div>
@@ -36,8 +38,10 @@
   <!-- Loading State -->
   <div *ngIf="loading()" class="flex items-center justify-center py-12">
     <div class="text-center">
-      <div class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent"></div>
-      <p class="mt-4 text-sm text-white/60">Loading schedule data...</p>
+      <div
+        class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent"
+      ></div>
+      <p class="mt-4 text-sm text-white">Loading schedule data...</p>
     </div>
   </div>
 
@@ -72,11 +76,11 @@
           <div class="flex items-start justify-between">
             <div class="flex-1">
               <p class="font-medium text-white">{{ reminder.label }}</p>
-              <p class="mt-1 text-xs text-white/60">
+              <p class="mt-1 text-xs text-white">
                 {{ reminder.projectName }}
               </p>
-              <p class="mt-2 text-sm text-white/80">
-                Due: {{ reminder.dueDate | date : 'MMM d, y' }}
+              <p class="mt-2 text-sm text-white">
+                Due: {{ reminder.dueDate | date: "MMM d, y" }}
               </p>
             </div>
             <span
@@ -84,16 +88,16 @@
                 isOverdue(reminder.dueDate)
                   ? 'rounded-full bg-red-500/20 px-2 py-1 text-xs font-medium text-red-400'
                   : isDueSoon(reminder.dueDate)
-                  ? 'rounded-full bg-yellow-500/20 px-2 py-1 text-xs font-medium text-yellow-400'
-                  : 'rounded-full bg-green-500/20 px-2 py-1 text-xs font-medium text-green-400'
+                    ? 'rounded-full bg-yellow-500/20 px-2 py-1 text-xs font-medium text-yellow-400'
+                    : 'rounded-full bg-green-500/20 px-2 py-1 text-xs font-medium text-green-400'
               "
             >
               {{
                 isOverdue(reminder.dueDate)
-                  ? 'Overdue'
+                  ? "Overdue"
                   : isDueSoon(reminder.dueDate)
-                  ? 'Due Soon'
-                  : getDaysUntilDue(reminder.dueDate) + ' days'
+                    ? "Due Soon"
+                    : getDaysUntilDue(reminder.dueDate) + " days"
               }}
             </span>
           </div>
@@ -111,7 +115,7 @@
           [class]="
             activeTab() === 'calendar'
               ? 'border-b-2 border-primary px-4 py-2 text-sm font-semibold text-primary'
-              : 'px-4 py-2 text-sm font-medium text-white/60 transition-colors hover:text-white'
+              : 'px-4 py-2 text-sm font-medium text-white transition-colors hover:text-white'
           "
         >
           Calendar View
@@ -121,7 +125,7 @@
           [class]="
             activeTab() === 'timeline'
               ? 'border-b-2 border-primary px-4 py-2 text-sm font-semibold text-primary'
-              : 'px-4 py-2 text-sm font-medium text-white/60 transition-colors hover:text-white'
+              : 'px-4 py-2 text-sm font-medium text-white transition-colors hover:text-white'
           "
         >
           Timeline View
@@ -131,7 +135,7 @@
           [class]="
             activeTab() === 'gantt'
               ? 'border-b-2 border-primary px-4 py-2 text-sm font-semibold text-primary'
-              : 'px-4 py-2 text-sm font-medium text-white/60 transition-colors hover:text-white'
+              : 'px-4 py-2 text-sm font-medium text-white transition-colors hover:text-white'
           "
         >
           Gantt View
@@ -140,23 +144,17 @@
 
       <!-- Calendar Tab -->
       <div *ngIf="activeTab() === 'calendar'" class="space-y-4">
-        <app-calendar-view
-          [events]="calendarEvents()"
-        ></app-calendar-view>
+        <app-calendar-view [events]="calendarEvents()"></app-calendar-view>
       </div>
 
       <!-- Timeline Tab -->
       <div *ngIf="activeTab() === 'timeline'" class="space-y-4">
-        <app-timeline-view
-          [projects]="timelineProjects()"
-        ></app-timeline-view>
+        <app-timeline-view [projects]="timelineProjects()"></app-timeline-view>
       </div>
 
       <!-- Gantt Tab -->
       <div *ngIf="activeTab() === 'gantt'" class="space-y-4">
-        <app-gantt-view
-          [projects]="ganttData()"
-        ></app-gantt-view>
+        <app-gantt-view [projects]="ganttData()"></app-gantt-view>
       </div>
     </div>
   </div>
@@ -166,7 +164,6 @@
     *ngIf="!loading() && !scheduleData()"
     class="rounded-[26px] border border-dashed border-white/20 bg-white/5 px-6 py-12 text-center"
   >
-    <p class="text-sm text-white/60">No schedule data available.</p>
+    <p class="text-sm text-white">No schedule data available.</p>
   </div>
 </div>
-

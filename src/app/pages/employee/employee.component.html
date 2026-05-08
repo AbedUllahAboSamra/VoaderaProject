@@ -14,14 +14,14 @@
           id="employee-search"
           type="search"
           placeholder="Search employees, departments, IDs…"
-          class="w-full rounded-2xl border border-white/15 bg-white/5 px-10 py-3 text-sm text-white/80 shadow-inner shadow-slate-950/30 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white focus:shadow-[0_10px_30px_rgba(59,130,246,0.25)]"
+          class="w-full rounded-2xl border border-white/15 bg-white/5 px-10 py-3 text-sm text-white shadow-inner shadow-slate-950/30 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white focus:shadow-[0_10px_30px_rgba(59,130,246,0.25)]"
           (input)="updateSearch($any($event.target).value)"
         />
       </div>
     </div>
     <div class="flex flex-wrap items-center gap-3">
       <div
-        class="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-medium text-white/60"
+        class="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-medium text-white"
       >
         {{ filteredEmployees().length }} of {{ employees().length }} employees
       </div>
@@ -50,7 +50,7 @@
       <button
         type="button"
         [disabled]="isSaving"
-        class="text-xs text-white/60 transition hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+        class="text-xs text-white transition hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
         (click)="closeCreatePanel()"
       >
         Cancel
@@ -65,181 +65,181 @@
       <div class="sm:col-span-1">
         <label
           for="create-name"
-          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/60"
+          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white"
           >اسم العامل</label
         >
         <input
           id="create-name"
           type="text"
           formControlName="employeeName"
-          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
+          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
           placeholder="Jane Doe"
         />
       </div>
       <div class="sm:col-span-1">
         <label
           for="create-dept"
-          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/60"
+          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white"
           >Department</label
         >
         <input
           id="create-dept"
           type="text"
           formControlName="department"
-          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
+          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
           placeholder="Engineering"
         />
       </div>
       <div class="sm:col-span-1">
         <label
           for="create-deptid"
-          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/60"
+          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white"
           >Department ID</label
         >
         <input
           id="create-deptid"
           type="number"
           formControlName="deptId"
-          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
+          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
           placeholder="101"
         />
       </div>
       <div class="sm:col-span-1">
         <label
           for="create-role"
-          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/60"
+          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white"
           >Role</label
         >
         <input
           id="create-role"
           type="text"
           formControlName="role"
-          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
+          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
           placeholder="Backend Engineer"
         />
       </div>
       <div class="sm:col-span-1">
         <label
           for="create-title"
-          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/60"
+          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white"
           >Title</label
         >
         <input
           id="create-title"
           type="text"
           formControlName="title"
-          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
+          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
           placeholder="Principal Engineer"
         />
       </div>
       <div class="sm:col-span-1">
         <label
           for="create-employment"
-          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/60"
+          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white"
           >Employment type</label
         >
         <input
           id="create-employment"
           type="text"
           formControlName="employmentType"
-          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
+          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
           placeholder="Full-time"
         />
       </div>
       <div class="sm:col-span-1">
         <label
           for="create-phone"
-          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/60"
+          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white"
           >Contact number</label
         >
         <input
           id="create-phone"
           type="tel"
           formControlName="contactNo"
-          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
+          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
           placeholder="+1 (555) 123-9876"
         />
       </div>
       <div class="sm:col-span-1">
         <label
           for="create-email"
-          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/60"
+          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white"
           >Email</label
         >
         <input
           id="create-email"
           type="email"
           formControlName="emailId"
-          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
+          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
           placeholder="person@example.com"
         />
       </div>
       <div class="sm:col-span-1">
         <label
           for="create-location"
-          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/60"
+          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white"
           >Location</label
         >
         <input
           id="create-location"
           type="text"
           formControlName="location"
-          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
+          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
           placeholder="Berlin"
         />
       </div>
       <div class="sm:col-span-1">
         <label
           for="create-timezone"
-          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/60"
+          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white"
           >Timezone</label
         >
         <input
           id="create-timezone"
           type="text"
           formControlName="timezone"
-          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
+          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
           placeholder="Europe/Berlin"
         />
       </div>
       <div class="sm:col-span-1">
         <label
           for="create-hireDate"
-          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/60"
+          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white"
           >Hire Date</label
         >
         <input
           id="create-hireDate"
           type="date"
           formControlName="hireDate"
-          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
+          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
         />
       </div>
       <!-- <div class="sm:col-span-1">
         <label
           for="create-skills"
-          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/60"
+          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white"
           >Skills (comma separated)</label
         >
         <input
           id="create-skills"
           type="text"
           formControlName="skills"
-          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
+          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
           placeholder="Angular, TypeScript"
         />
       </div> -->
       <!-- <div class="sm:col-span-1">
         <label
           for="create-tags"
-          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/60"
+          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white"
           >Tags (comma separated)</label
         >
         <input
           id="create-tags"
           type="text"
           formControlName="tags"
-          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
+          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
           placeholder="mentor, remote"
         />
       </div> -->
@@ -265,12 +265,12 @@
     >
       <button
         type="button"
-        class="flex w-full items-center justify-between gap-4 px-6 py-5 text-left text-sm text-white/80 transition hover:bg-white/5"
+        class="flex w-full items-center justify-between gap-4 px-6 py-5 text-left text-sm text-white transition hover:bg-white/5"
         (click)="toggleExpand(employee.id)"
       >
         <div class="flex flex-1 flex-col gap-1 md:flex-row md:items-center">
           <span
-            class="inline-flex h-8 w-8 items-center justify-center rounded-2xl border border-white/15 bg-white/10 text-xs font-semibold text-white/80 shadow-inner shadow-slate-950/25"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-2xl border border-white/15 bg-white/10 text-xs font-semibold text-white shadow-inner shadow-slate-950/25"
           >
             {{ employee.id }}
           </span>
@@ -619,7 +619,7 @@
 
     <div
       *ngIf="!filteredEmployees().length"
-      class="rounded-[26px] border border-dashed border-white/15 bg-white/5/60 px-6 py-12 text-center text-sm text-white/60 backdrop-blur-lg"
+      class="rounded-[26px] border border-dashed border-white/15 bg-white/5/60 px-6 py-12 text-center text-sm text-white backdrop-blur-lg"
     >
       No employees match your filters.
     </div>

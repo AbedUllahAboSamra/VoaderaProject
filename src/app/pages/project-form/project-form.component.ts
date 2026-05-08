@@ -129,7 +129,7 @@ const APPROVAL_STATUS_LABELS: Record<ApprovalStatus, string> = {
 };
 
 const APPROVAL_STATUS_CLASSES: Record<ApprovalStatus, string> = {
-  draft: 'border border-white/20 bg-white/10 text-white/80',
+  draft: 'border border-white/20 bg-white/10 text-white',
   in_review: 'border border-sky-400/40 bg-sky-500/10 text-sky-200',
   approved: 'border border-emerald-400/40 bg-emerald-500/10 text-emerald-200',
   rejected: 'border border-rose-400/40 bg-rose-500/10 text-rose-200',

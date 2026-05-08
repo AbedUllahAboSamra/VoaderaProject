@@ -5,7 +5,7 @@
   >
     <div>
       <h1 class="text-2xl font-bold text-white">Business Insights</h1>
-      <p class="text-sm text-white/60 mt-1">
+      <p class="text-sm text-white mt-1">
         Analytics and reporting for projects, resources, and performance
       </p>
     </div>
@@ -44,14 +44,14 @@
     >
       <div>
         <label
-          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/60"
+          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white"
         >
           Date Range
         </label>
         <select
           formControlName="dateRange"
           (change)="onFilterChange()"
-          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
+          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
         >
           <option value="all">All Time</option>
           <option value="last30">Last 30 Days</option>
@@ -62,7 +62,7 @@
       </div>
       <div *ngIf="filterForm.get('dateRange')?.value === 'custom'">
         <label
-          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/60"
+          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white"
         >
           Start Date
         </label>
@@ -70,12 +70,12 @@
           type="date"
           formControlName="startDate"
           (change)="onFilterChange()"
-          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
+          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
         />
       </div>
       <div *ngIf="filterForm.get('dateRange')?.value === 'custom'">
         <label
-          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/60"
+          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white"
         >
           End Date
         </label>
@@ -83,19 +83,19 @@
           type="date"
           formControlName="endDate"
           (change)="onFilterChange()"
-          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
+          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
         />
       </div>
       <div>
         <label
-          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/60"
+          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white"
         >
           Department
         </label>
         <select
           formControlName="department"
           (change)="onFilterChange()"
-          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
+          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
         >
           <option value="all">All Departments</option>
           <option *ngFor="let dept of departmentsSignal()" [value]="dept">
@@ -112,7 +112,7 @@
       <div
         class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent"
       ></div>
-      <p class="mt-4 text-sm text-white/60">Loading insights...</p>
+      <p class="mt-4 text-sm text-white">Loading insights...</p>
     </div>
   </div>
 
@@ -124,7 +124,7 @@
         (click)="setActiveTab('overview')"
         [ngClass]="{
           'border-b-2 border-primary text-white': activeTab() === 'overview',
-          'text-white/60': activeTab() !== 'overview'
+          'text-white': activeTab() !== 'overview',
         }"
         class="px-4 py-2 text-sm font-medium transition-colors hover:text-white"
       >
@@ -135,7 +135,7 @@
         (click)="setActiveTab('projects')"
         [ngClass]="{
           'border-b-2 border-primary text-white': activeTab() === 'projects',
-          'text-white/60': activeTab() !== 'projects'
+          'text-white': activeTab() !== 'projects',
         }"
         class="px-4 py-2 text-sm font-medium transition-colors hover:text-white"
       >
@@ -146,7 +146,7 @@
         (click)="setActiveTab('resources')"
         [ngClass]="{
           'border-b-2 border-primary text-white': activeTab() === 'resources',
-          'text-white/60': activeTab() !== 'resources'
+          'text-white': activeTab() !== 'resources',
         }"
         class="px-4 py-2 text-sm font-medium transition-colors hover:text-white"
       >
@@ -157,7 +157,7 @@
         (click)="setActiveTab('financials')"
         [ngClass]="{
           'border-b-2 border-primary text-white': activeTab() === 'financials',
-          'text-white/60': activeTab() !== 'financials'
+          'text-white': activeTab() !== 'financials',
         }"
         class="px-4 py-2 text-sm font-medium transition-colors hover:text-white"
       >
@@ -188,7 +188,8 @@
           <p class="mt-2 text-3xl font-bold text-white">
             {{
               (insights()?.filteredEmployeeCount ??
-                insights()?.resourceUtilization?.totalEmployees) || 0
+                insights()?.resourceUtilization?.totalEmployees) ||
+                0
             }}
           </p>
         </div>
@@ -213,9 +214,11 @@
           </p>
         </div>
       </div>
-      
+
       <!-- Project Breakdown Badges - Full Width Row Below Cards -->
-      <div class="rounded-2xl border border-white/10 bg-white/5 px-6 py-4 backdrop-blur-xl">
+      <div
+        class="rounded-2xl border border-white/10 bg-white/5 px-6 py-4 backdrop-blur-xl"
+      >
         <div class="flex flex-wrap gap-2 items-center">
           <span
             class="inline-flex items-center rounded-full bg-cyan-500/20 px-2 py-0.5 text-xs font-medium text-cyan-400 border border-cyan-500/30"
@@ -280,36 +283,36 @@
                 {
                   label: 'Draft',
                   value: insights()?.projectStatusDistribution?.draft || 0,
-                  color: 'bg-slate-500'
+                  color: 'bg-slate-500',
                 },
                 {
                   label: 'In Progress',
                   value:
                     insights()?.projectStatusDistribution?.in_progress || 0,
-                  color: 'bg-blue-500'
+                  color: 'bg-blue-500',
                 },
                 {
                   label: 'Completed',
                   value: insights()?.projectStatusDistribution?.completed || 0,
-                  color: 'bg-green-500'
+                  color: 'bg-green-500',
                 },
                 {
                   label: 'On Hold',
                   value: insights()?.projectStatusDistribution?.on_hold || 0,
-                  color: 'bg-yellow-500'
+                  color: 'bg-yellow-500',
                 },
                 {
                   label: 'Cancelled',
                   value: insights()?.projectStatusDistribution?.cancelled || 0,
-                  color: 'bg-red-500'
-                }
+                  color: 'bg-red-500',
+                },
               ]
             "
             class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 backdrop-blur-xl"
           >
             <div class="flex items-center justify-between">
               <div>
-                <p class="text-xs text-white/60">{{ item.label }}</p>
+                <p class="text-xs text-white">{{ item.label }}</p>
                 <p class="mt-1 text-2xl font-bold text-white">
                   {{ item.value }}
                 </p>
@@ -334,7 +337,7 @@
             *ngFor="let dist of insights()?.readinessScores?.distribution || []"
             class="flex items-center gap-4"
           >
-            <div class="w-24 text-sm text-white/60">{{ dist.range }}</div>
+            <div class="w-24 text-sm text-white">{{ dist.range }}</div>
             <div class="flex-1">
               <div class="h-6 rounded-full bg-white/10">
                 <div
@@ -369,24 +372,16 @@
           <table class="w-full text-sm">
             <thead>
               <tr class="border-b border-white/10 text-left">
-                <th
-                  class="pb-3 text-xs uppercase tracking-[0.3em] text-white/60"
-                >
+                <th class="pb-3 text-xs uppercase tracking-[0.3em] text-white">
                   Department
                 </th>
-                <th
-                  class="pb-3 text-xs uppercase tracking-[0.3em] text-white/60"
-                >
+                <th class="pb-3 text-xs uppercase tracking-[0.3em] text-white">
                   Employees
                 </th>
-                <th
-                  class="pb-3 text-xs uppercase tracking-[0.3em] text-white/60"
-                >
+                <th class="pb-3 text-xs uppercase tracking-[0.3em] text-white">
                   Projects
                 </th>
-                <th
-                  class="pb-3 text-xs uppercase tracking-[0.3em] text-white/60"
-                >
+                <th class="pb-3 text-xs uppercase tracking-[0.3em] text-white">
                   Avg Readiness
                 </th>
               </tr>
@@ -399,8 +394,8 @@
                 <td class="py-3 font-medium text-white">
                   {{ dept.department }}
                 </td>
-                <td class="py-3 text-white/80">{{ dept.employeeCount }}</td>
-                <td class="py-3 text-white/80">{{ dept.projectCount }}</td>
+                <td class="py-3 text-white">{{ dept.employeeCount }}</td>
+                <td class="py-3 text-white">{{ dept.projectCount }}</td>
                 <td class="py-3">
                   <span
                     class="inline-flex rounded-full bg-primary/20 px-3 py-1 text-xs text-primary"
@@ -410,7 +405,7 @@
                 </td>
               </tr>
               <tr *ngIf="!insights()?.departmentBreakdown?.length">
-                <td colspan="4" class="py-8 text-center text-sm text-white/60">
+                <td colspan="4" class="py-8 text-center text-sm text-white">
                   No department data available for the selected filters.
                 </td>
               </tr>
@@ -432,7 +427,7 @@
           >
             <p class="text-sm font-medium text-white">{{ type.type }}</p>
             <p class="mt-2 text-2xl font-bold text-white">{{ type.count }}</p>
-            <p class="mt-1 text-xs text-white/60">
+            <p class="mt-1 text-xs text-white">
               Avg Readiness: {{ type.averageReadiness }}%
             </p>
           </div>
@@ -441,7 +436,7 @@
           *ngIf="!insights()?.projectTypeBreakdown?.length"
           class="rounded-2xl border border-dashed border-white/20 bg-white/5 px-6 py-12 text-center"
         >
-          <p class="text-sm text-white/60">
+          <p class="text-sm text-white">
             No project type data available for the selected filters.
           </p>
         </div>
@@ -460,7 +455,7 @@
           <div
             class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 backdrop-blur-xl"
           >
-            <p class="text-xs text-white/60">Total Employees</p>
+            <p class="text-xs text-white">Total Employees</p>
             <p class="mt-2 text-3xl font-bold text-white">
               {{ insights()?.resourceUtilization?.totalEmployees || 0 }}
             </p>
@@ -468,7 +463,7 @@
           <div
             class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 backdrop-blur-xl"
           >
-            <p class="text-xs text-white/60">Active Assignments</p>
+            <p class="text-xs text-white">Active Assignments</p>
             <p class="mt-2 text-3xl font-bold text-white">
               {{ insights()?.resourceUtilization?.activeAssignments || 0 }}
             </p>
@@ -476,7 +471,7 @@
           <div
             class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 backdrop-blur-xl"
           >
-            <p class="text-xs text-white/60">Average Allocation</p>
+            <p class="text-xs text-white">Average Allocation</p>
             <p class="mt-2 text-3xl font-bold text-white">
               {{ insights()?.resourceUtilization?.averageAllocation || 0 }}%
             </p>
@@ -484,7 +479,7 @@
           <div
             class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 backdrop-blur-xl"
           >
-            <p class="text-xs text-white/60">Available Resources</p>
+            <p class="text-xs text-white">Available Resources</p>
             <p class="mt-2 text-3xl font-bold text-white">
               {{ insights()?.resourceUtilization?.availableCount || 0 }}
             </p>
@@ -499,7 +494,7 @@
         <div class="space-y-4">
           <div>
             <div class="mb-2 flex items-center justify-between text-sm">
-              <span class="text-white/60">Utilization</span>
+              <span class="text-white">Utilization</span>
               <span class="font-semibold text-white">
                 {{ insights()?.teamCapacity?.utilizationPercentage || 0 }}%
               </span>
@@ -515,19 +510,19 @@
           </div>
           <div class="grid gap-4 sm:grid-cols-3">
             <div>
-              <p class="text-xs text-white/60">Total Capacity</p>
+              <p class="text-xs text-white">Total Capacity</p>
               <p class="mt-1 text-xl font-bold text-white">
                 {{ insights()?.teamCapacity?.totalCapacity || 0 }}%
               </p>
             </div>
             <div>
-              <p class="text-xs text-white/60">Utilized</p>
+              <p class="text-xs text-white">Utilized</p>
               <p class="mt-1 text-xl font-bold text-white">
                 {{ insights()?.teamCapacity?.utilizedCapacity || 0 }}%
               </p>
             </div>
             <div>
-              <p class="text-xs text-white/60">Available</p>
+              <p class="text-xs text-white">Available</p>
               <p class="mt-1 text-xl font-bold text-white">
                 {{ insights()?.teamCapacity?.availableCapacity || 0 }}%
               </p>
@@ -547,42 +542,42 @@
           <div
             class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 backdrop-blur-xl"
           >
-            <p class="text-xs text-white/60">Total Budget</p>
+            <p class="text-xs text-white">Total Budget</p>
             <p class="mt-2 text-2xl font-bold text-white">
               ${{
-                insights()?.budgetMetrics?.totalBudget || 0 | number : "1.0-0"
+                insights()?.budgetMetrics?.totalBudget || 0 | number: "1.0-0"
               }}
             </p>
           </div>
           <div
             class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 backdrop-blur-xl"
           >
-            <p class="text-xs text-white/60">Allocated</p>
+            <p class="text-xs text-white">Allocated</p>
             <p class="mt-2 text-2xl font-bold text-white">
               ${{
                 insights()?.budgetMetrics?.allocatedBudget || 0
-                  | number : "1.0-0"
+                  | number: "1.0-0"
               }}
             </p>
           </div>
           <div
             class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 backdrop-blur-xl"
           >
-            <p class="text-xs text-white/60">Spent</p>
+            <p class="text-xs text-white">Spent</p>
             <p class="mt-2 text-2xl font-bold text-white">
               ${{
-                insights()?.budgetMetrics?.spentBudget || 0 | number : "1.0-0"
+                insights()?.budgetMetrics?.spentBudget || 0 | number: "1.0-0"
               }}
             </p>
           </div>
           <div
             class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 backdrop-blur-xl"
           >
-            <p class="text-xs text-white/60">Remaining</p>
+            <p class="text-xs text-white">Remaining</p>
             <p class="mt-2 text-2xl font-bold text-white">
               ${{
                 insights()?.budgetMetrics?.remainingBudget || 0
-                  | number : "1.0-0"
+                  | number: "1.0-0"
               }}
             </p>
           </div>

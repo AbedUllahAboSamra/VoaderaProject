@@ -53,12 +53,14 @@
   </div>
 
   <!-- Calendar Grid -->
-  <div class="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-xl">
+  <div
+    class="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-xl"
+  >
     <!-- Day Headers -->
     <div class="mb-2 grid grid-cols-7 gap-2">
       <div
         *ngFor="let day of ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']"
-        class="py-2 text-center text-xs font-semibold uppercase tracking-wider text-white/60"
+        class="py-2 text-center text-xs font-semibold uppercase tracking-wider text-white"
       >
         {{ day }}
       </div>
@@ -120,7 +122,7 @@
                   </div>
                 </div>
                 <div
-                  class="cursor-pointer text-xs text-white/60 transition-colors hover:text-white"
+                  class="cursor-pointer text-xs text-white transition-colors hover:text-white"
                   (mouseenter)="onMoreMouseEnter(day.date)"
                 >
                   +{{ day.events.length - 2 }} more
@@ -177,22 +179,21 @@
         class="h-3 w-3 rounded border"
         [class]="getEventTypeColor('milestone')"
       ></div>
-      <span class="text-white/60">Milestone</span>
+      <span class="text-white">Milestone</span>
     </div>
     <div class="flex items-center gap-2">
       <div
         class="h-3 w-3 rounded border"
         [class]="getEventTypeColor('due-date')"
       ></div>
-      <span class="text-white/60">Due Date</span>
+      <span class="text-white">Due Date</span>
     </div>
     <div class="flex items-center gap-2">
       <div
         class="h-3 w-3 rounded border"
         [class]="getEventTypeColor('reminder')"
       ></div>
-      <span class="text-white/60">Reminder</span>
+      <span class="text-white">Reminder</span>
     </div>
   </div>
 </div>
-
