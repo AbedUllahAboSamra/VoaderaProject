@@ -23,7 +23,7 @@
       <div
         class="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-medium text-white/60"
       >
-        {{ filteredProjects().length }} of {{ projects().length }} projects
+        {{ filteredProjects().length }} of {{ projects().length }} tasks
       </div>
       <button
         ubButton
@@ -31,7 +31,7 @@
         class="bg-gradient-to-r from-sky-500 via-indigo-500 to-purple-500 text-white shadow-[0_20px_45px_rgba(14,116,244,0.35)]"
         (click)="startCreate()"
       >
-        Add project
+        Add task
       </button>
       <a
         ubButton
@@ -51,7 +51,7 @@
   >
     <header class="mb-4 flex items-center justify-between">
       <div>
-        <h2 class="text-lg font-semibold text-white">Create new project</h2>
+        <h2 class="text-lg font-semibold text-white">Create new task</h2>
         <p class="text-xs uppercase tracking-[0.3em] text-white/50">
           Track engagements from day one
         </p>
@@ -75,11 +75,12 @@
         <label
           for="project-name"
           class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/60"
-          >Project name</label
+          >task name</label
         >
         <input
           id="project-name"
           type="text"
+          value="Task Name"
           formControlName="taskTitle"
           class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
           placeholder="Next-gen platform"
@@ -108,48 +109,34 @@
         <input
           id="start-date"
           type="date"
+          value="15-12-2026"
           formControlName="startDate"
           class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
         />
       </div>
       <div class="md:col-span-1">
         <label
-          for="contact-person"
+          for="start-date"
           class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/60"
-          >Contact person</label
+          >finish date</label
         >
         <input
-          id="contact-person"
-          type="text"
-          formControlName="contactPerson"
+          id="start-date"
+          type="date"
+          value="15-12-2027"
+          formControlName="startDate"
           class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
-          placeholder="Jane Smith"
         />
       </div>
-      <div class="md:col-span-1">
-        <label
-          for="contact-no"
-          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/60"
-          >Contact number</label
-        >
-        <input
-          id="contact-no"
-          type="tel"
-          formControlName="contactNo"
-          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
-          placeholder="+1 (555) 123-9876"
-        />
-      </div>
+
       <div class="md:col-span-1">
         <label
           for="email-id"
           class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/60"
-          >Contact email</label
+          >created by</label
         >
         <input
-          id="email-id"
-          type="email"
-          formControlName="emailId"
+          value="manager ahmad"
           class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
           placeholder="jane@client.com"
         />
@@ -162,8 +149,8 @@
           [disabled]="isSaving"
           class="bg-gradient-to-r from-emerald-500 via-green-500 to-lime-500 text-white shadow-[0_20px_45px_rgba(34,197,94,0.35)] disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <span *ngIf="!isSaving">Save project</span>
-          <span *ngIf="isSaving">Saving project...</span>
+          <span *ngIf="!isSaving">Save task</span>
+          <span *ngIf="isSaving">Saving task...</span>
         </button>
       </div>
     </form>
@@ -211,106 +198,115 @@
         >
           <form
             [formGroup]="projectForm"
-            class="grid gap-4 md:grid-cols-2"
             (ngSubmit)="onSave()"
+            class="grid gap-4 md:grid-cols-2"
             [class.opacity-50]="isSaving"
           >
             <div class="md:col-span-1">
               <label
-                for="edit-project-name-{{ project.taskId }}"
-                class="mb-2 block text-xs uppercase tracking-[0.3em] text-white/50"
-                >Project name</label
+                for="project-name"
+                class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/60"
+                >task name</label
               >
               <input
-                [id]="'edit-project-name-' + project.taskId"
+                id="project-name"
                 type="text"
-                formControlName="taskTitle"
-                class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/90 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
+                value="Task Name"
+                class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
+                placeholder="Next-gen platform"
               />
             </div>
             <div class="md:col-span-1">
               <label
-                for="edit-client-{{ project.taskId }}"
-                class="mb-2 block text-xs uppercase tracking-[0.3em] text-white/50"
+                for="client-name"
+                class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/60"
                 >Client name</label
               >
               <input
-                [id]="'edit-client-' + project.taskId"
+                id="client-name"
                 type="text"
-                formControlName="clientName"
-                class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/90 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
+                value="ahmad"
+                class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
+                placeholder="Acme Corp"
               />
             </div>
             <div class="md:col-span-1">
               <label
-                for="edit-start-{{ project.taskId }}"
-                class="mb-2 block text-xs uppercase tracking-[0.3em] text-white/50"
+                for="start-date"
+                class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/60"
                 >Start date</label
               >
               <input
-                [id]="'edit-start-' + project.taskId"
+                id="start-date"
                 type="date"
-                formControlName="startDate"
-                class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/90 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
+                value="2026/03/12"
+                class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
               />
             </div>
             <div class="md:col-span-1">
               <label
-                for="edit-contact-person-{{ project.taskId }}"
-                class="mb-2 block text-xs uppercase tracking-[0.3em] text-white/50"
-                >Contact person</label
+                for="start-date"
+                class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/60"
+                >finish date</label
               >
               <input
-                [id]="'edit-contact-person-' + project.taskId"
-                type="text"
-                formControlName="contactPerson"
-                class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/90 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
+                id="start-date"
+                value="15-12-2027"
+                class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
               />
             </div>
+
             <div class="md:col-span-1">
               <label
-                for="edit-contact-no-{{ project.taskId }}"
-                class="mb-2 block text-xs uppercase tracking-[0.3em] text-white/50"
-                >Contact number</label
+                for="email-id"
+                class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/60"
+                >created by</label
               >
               <input
-                [id]="'edit-contact-no-' + project.taskId"
-                type="tel"
-                formControlName="contactNo"
-                class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/90 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
-              />
-            </div>
-            <div class="md:col-span-1">
-              <label
-                for="edit-email-{{ project.taskId }}"
-                class="mb-2 block text-xs uppercase tracking-[0.3em] text-white/50"
-                >Contact email</label
-              >
-              <input
-                [id]="'edit-email-' + project.taskId"
-                type="email"
-                formControlName="emailId"
-                class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/90 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
+                value="manager ahmad"
+                class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
+                placeholder="jane@client.com"
               />
             </div>
             <div class="md:col-span-2 flex justify-end gap-3 pt-2">
               <button
-                type="button"
+                type="submit"
+                ubButton
+                size="sm"
                 [disabled]="isSaving"
-                class="rounded-xl border border-white/20 px-4 py-2 text-xs text-white/70 transition hover:border-white/40 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
-                (click)="cancelEdit()"
+                class="bg-gradient-to-r from-emerald-500 via-green-500 to-lime-500 text-white shadow-[0_20px_45px_rgba(34,197,94,0.35)] disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Cancel
+                <span *ngIf="!isSaving">Save task</span>
+                <span *ngIf="isSaving">Saving task...</span>
               </button>
               <button
                 type="submit"
                 ubButton
                 size="sm"
                 [disabled]="isSaving"
-                class="bg-gradient-to-r from-sky-500 via-indigo-500 to-purple-500 text-white shadow-[0_20px_45px_rgba(14,116,244,0.35)] disabled:opacity-50 disabled:cursor-not-allowed"
+                class="bg-gradient-to-r from-emerald-500 via-green-500 to-lime-500 text-white shadow-[0_20px_45px_rgba(34,197,94,0.35)] disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <span *ngIf="!isSaving">Save changes</span>
-                <span *ngIf="isSaving">Updating...</span>
+                <span *ngIf="!isSaving">Submit signature</span>
+                <span *ngIf="isSaving">Saving task...</span>
+              </button>
+              <button
+                type="submit"
+                ubButton
+                size="sm"
+                [disabled]="isSaving"
+                class="bg-gradient-to-r from-blue-500 via-blue-500 to-blue-500 text-white shadow-[0_20px_45px_rgba(34,197,94,0.35)] disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <span *ngIf="!isSaving">Take</span>
+                <span *ngIf="isSaving">Saving task...</span></button
+              ><button
+                type="submit"
+                ubButton
+                size="sm"
+                [disabled]="isSaving"
+                class="bg-gradient-to-r from-red-500 via-red-500 to-red-500 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <span *ngIf="!isSaving">cancel Task</span>
+                <span *ngIf="isSaving">Saving task...</span>
               </button>
             </div>
           </form>
@@ -401,7 +397,7 @@
       *ngIf="!filteredProjects().length"
       class="rounded-[26px] border border-dashed border-white/15 bg-white/5/60 px-6 py-12 text-center text-sm text-white/60 backdrop-blur-lg"
     >
-      No projects match your filters.
+      No tasks match your filters.
     </div>
   </section>
 </div>
@@ -428,7 +424,7 @@
       Delete {{ toDelete.taskTitle }}?
     </h2>
     <p class="mt-2 text-white/70">
-      This action cannot be undone. The project and its history will be removed.
+      This action cannot be undone. The task and its history will be removed.
     </p>
     <div class="mt-6 flex justify-end gap-3">
       <button
@@ -445,7 +441,7 @@
         class="rounded-xl border border-rose-500/40 bg-rose-500/20 px-4 py-2 text-xs text-rose-100 shadow-[0_20px_45px_rgba(244,63,94,0.35)] transition hover:border-rose-400/60 hover:bg-rose-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
         (click)="confirmDelete(true)"
       >
-        <span *ngIf="!isDeleting">Delete project</span>
+        <span *ngIf="!isDeleting">Delete task</span>
         <span *ngIf="isDeleting">Deleting...</span>
       </button>
     </div>

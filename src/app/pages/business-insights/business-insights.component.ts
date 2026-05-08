@@ -7,7 +7,12 @@ import {
   FormGroup,
 } from '@angular/forms';
 import { MasterService } from '../../service/master.service';
-import { IProject, IProjectEmployee } from '../../model/interface/master';
+import {
+  EMPLOYEES_DATA,
+  IProject,
+  IProjectEmployee,
+  TASKS_DATA,
+} from '../../model/interface/master';
 import { Employee } from '../../model/class/Employee';
 import { UbButtonDirective } from '@/app/components/ui/button';
 
@@ -124,6 +129,15 @@ export class BusinessInsightsComponent implements OnInit {
   }
 
   loadData(): void {
+
+    // 🔹 بيانات وهمية
+    this.projectsSignal.set(TASKS_DATA as any); // أو IProject mock
+    this.employeesSignal.set(EMPLOYEES_DATA as any);
+    this.projectEmployeesSignal.set([]); // أو اعمل mock إذا بدك
+
+    this.calculateInsights();
+
+  
     // this.loadingSignal.set(true);
 
     // let projectsLoaded = false;
@@ -194,10 +208,10 @@ export class BusinessInsightsComponent implements OnInit {
     // Step 1: Separate archived projects (excluded from calculations but counted separately)
     const allProjectsCount = projects.length; // Total including archived
     const archivedProjects = projects.filter(
-      (p) => p.archivedAt != null && p.archivedAt !== ''
+      (p) => p.archivedAt != null && p.archivedAt !== '',
     );
     let filteredProjects = projects.filter(
-      (p) => !p.archivedAt || p.archivedAt === ''
+      (p) => !p.archivedAt || p.archivedAt === '',
     );
     let filteredEmployees = [...employees];
 
@@ -209,20 +223,18 @@ export class BusinessInsightsComponent implements OnInit {
         pe.isActive === 'Y' ||
         pe.isActive === 'y' ||
         pe.isActive === 'true' ||
-        String(pe.isActive).toLowerCase() === 'true'
+        String(pe.isActive).toLowerCase() === 'true',
     );
 
     // Apply department filter
     if (filters.department && filters.department !== 'all') {
       // Filter employees by department
       filteredEmployees = filteredEmployees.filter(
-        (emp) => emp.departmentId === filters.department
+        (emp) => emp.departmentId === filters.department,
       );
 
       // Filter project-employee assignments by department
-      const employeeIdsInDept = new Set(
-        filteredEmployees.map((e) => e.id)
-      );
+      const employeeIdsInDept = new Set(filteredEmployees.map((e) => e.id));
       allProjectEmployees = allProjectEmployees.filter((pe) => {
         return employeeIdsInDept.has(pe.empId);
       });
@@ -234,7 +246,7 @@ export class BusinessInsightsComponent implements OnInit {
       // 1. Project leads, OR
       // 2. Assigned to the project (via ProjectEmployee) - includes both active and inactive
       const projectIdsWithDeptAssignments = new Set(
-        allProjectEmployees.map((pe) => pe.projectId)
+        allProjectEmployees.map((pe) => pe.projectId),
       );
       filteredProjects = filteredProjects.filter((p) => {
         // Include if lead is in department OR if department employees are assigned to it
@@ -252,11 +264,11 @@ export class BusinessInsightsComponent implements OnInit {
               p.leadByEmpId && employeeIdsInDept.has(p.leadByEmpId);
             const hasDeptAssignment = allProjectEmployees.some(
               (pe) =>
-                pe.projectId === p.projectId && employeeIdsInDept.has(pe.empId)
+                pe.projectId === p.projectId && employeeIdsInDept.has(pe.empId),
             );
             return hasDeptLead || hasDeptAssignment;
           })
-          .map((p) => p.projectId)
+          .map((p) => p.projectId),
       );
     }
 
@@ -327,7 +339,7 @@ export class BusinessInsightsComponent implements OnInit {
                   projectDate && projectDate >= start && projectDate <= end
                 );
               })
-              .map((p) => p.projectId)
+              .map((p) => p.projectId),
           );
         } else {
           dateFilteredProjectIds = new Set(
@@ -340,7 +352,7 @@ export class BusinessInsightsComponent implements OnInit {
                   projectDate && projectDate >= cutoffDate && projectDate <= now
                 );
               })
-              .map((p) => p.projectId)
+              .map((p) => p.projectId),
           );
         }
 
@@ -355,7 +367,7 @@ export class BusinessInsightsComponent implements OnInit {
         // Filter employees to only those assigned to date-filtered projects
         // This includes both: employees assigned via ProjectEmployee AND project leads
         const employeeIdsInFilteredProjects = new Set(
-          activeProjectEmployees.map((pe) => pe.empId)
+          activeProjectEmployees.map((pe) => pe.empId),
         );
         // Also include project leads from filtered projects
         filteredProjects.forEach((p) => {
@@ -378,14 +390,14 @@ export class BusinessInsightsComponent implements OnInit {
       const employeeIdsInDept = new Set(
         employees
           .filter((e) => e.departmentId === filters.department)
-          .map((e) => e.id)
+          .map((e) => e.id),
       );
       filteredArchivedProjects = archivedProjects.filter((p) => {
         const hasDeptLead =
           p.leadByEmpId && employeeIdsInDept.has(p.leadByEmpId);
         const hasDeptAssignment = allProjectEmployees.some(
           (pe) =>
-            pe.projectId === p.projectId && employeeIdsInDept.has(pe.empId)
+            pe.projectId === p.projectId && employeeIdsInDept.has(pe.empId),
         );
         return hasDeptLead || hasDeptAssignment;
       });
@@ -446,10 +458,10 @@ export class BusinessInsightsComponent implements OnInit {
     // Calculate project states (only for non-archived projects)
     // When filtering by department, check for department-specific assignments
     const projectIdsWithActiveAssignments = new Set(
-      activeProjectEmployees.map((pe) => pe.projectId)
+      activeProjectEmployees.map((pe) => pe.projectId),
     );
     const projectIdsWithAnyAssignments = new Set(
-      allProjectEmployees.map((pe) => pe.projectId)
+      allProjectEmployees.map((pe) => pe.projectId),
     );
 
     // If department filter is applied, check for department-specific assignments
@@ -458,12 +470,12 @@ export class BusinessInsightsComponent implements OnInit {
       const employeeIdsInDept = new Set(
         employees
           .filter((e) => e.departmentId === filters.department && e.isActive)
-          .map((e) => e.id)
+          .map((e) => e.id),
       );
       projectIdsWithDeptActiveAssignments = new Set(
         activeProjectEmployees
           .filter((pe) => employeeIdsInDept.has(pe.empId))
-          .map((pe) => pe.projectId)
+          .map((pe) => pe.projectId),
       );
     } else {
       // No department filter - use all active assignments
@@ -480,10 +492,10 @@ export class BusinessInsightsComponent implements OnInit {
     filteredProjects.forEach((p) => {
       // Check for department-specific active assignments (or all if no department filter)
       const hasDeptActiveAssignments = projectIdsWithDeptActiveAssignments.has(
-        p.projectId
+        p.projectId,
       );
       const hasActiveAssignments = projectIdsWithActiveAssignments.has(
-        p.projectId
+        p.projectId,
       );
       const hasLead = p.leadByEmpId != null;
 
@@ -527,20 +539,20 @@ export class BusinessInsightsComponent implements OnInit {
       resourceUtilization: this.calculateResourceUtilization(
         filteredProjects,
         filteredEmployees,
-        activeProjectEmployees
+        activeProjectEmployees,
       ),
       readinessScores: this.calculateReadinessScores(filteredProjects),
       teamCapacity: this.calculateTeamCapacity(
         filteredProjects,
         filteredEmployees,
-        activeProjectEmployees
+        activeProjectEmployees,
       ),
       projectHealthTrends: this.calculateHealthTrends(filteredProjects),
       budgetMetrics: this.calculateBudgetMetrics(filteredProjects),
       departmentBreakdown: this.calculateDepartmentBreakdown(
         filteredProjects, // Use filtered projects to respect department/date filters
         filteredEmployees, // Use filtered employees to respect department/date filters
-        filters.department // Pass department filter to properly group projects
+        filters.department, // Pass department filter to properly group projects
       ),
       projectTypeBreakdown:
         this.calculateProjectTypeBreakdown(filteredProjects),
@@ -609,7 +621,7 @@ export class BusinessInsightsComponent implements OnInit {
           '[Business Insights] Unknown project status:',
           status,
           'for project:',
-          p.projectId
+          p.projectId,
         );
         distribution.draft++;
       }
@@ -621,7 +633,7 @@ export class BusinessInsightsComponent implements OnInit {
   private calculateResourceUtilization(
     projects: IProject[],
     employees: Employee[],
-    projectEmployees: IProjectEmployee[]
+    projectEmployees: IProjectEmployee[],
   ) {
     const totalEmployees = employees.filter((e) => e.isActive).length;
 
@@ -631,7 +643,7 @@ export class BusinessInsightsComponent implements OnInit {
         pe.isActive === 'Y' ||
         pe.isActive === 'y' ||
         pe.isActive === 'true' ||
-        String(pe.isActive).toLowerCase() === 'true'
+        String(pe.isActive).toLowerCase() === 'true',
     );
 
     // Calculate total allocation percentage across all employees
@@ -646,20 +658,20 @@ export class BusinessInsightsComponent implements OnInit {
     // Calculate average allocation
     const totalAllocation = Array.from(employeeAllocations.values()).reduce(
       (sum, alloc) => sum + alloc,
-      0
+      0,
     );
     const averageAllocation =
       totalEmployees > 0 ? totalAllocation / totalEmployees : 0;
 
     // Count overbooked employees (allocation > 100%)
     const overbookedCount = Array.from(employeeAllocations.values()).filter(
-      (alloc) => alloc > 100
+      (alloc) => alloc > 100,
     ).length;
 
     // Count available employees (no assignments or allocation = 0)
     const assignedEmployeeIds = new Set(employeeAllocations.keys());
     const availableCount = employees.filter(
-      (e) => e.isActive && !assignedEmployeeIds.has(e.id)
+      (e) => e.isActive && !assignedEmployeeIds.has(e.id),
     ).length;
 
     return {
@@ -708,14 +720,14 @@ export class BusinessInsightsComponent implements OnInit {
 
     const READINESS_TOTAL_WEIGHT = READINESS_DEFINITIONS.reduce(
       (total, item) => total + item.weight,
-      0
+      0,
     );
 
     // Create map of items by ID
     const itemsById = new Map(
       checklist.items
         .filter((item) => item && typeof item.id === 'string')
-        .map((item) => [item.id, item])
+        .map((item) => [item.id, item]),
     );
 
     // Calculate completed weight
@@ -776,7 +788,7 @@ export class BusinessInsightsComponent implements OnInit {
   private calculateTeamCapacity(
     projects: IProject[],
     employees: Employee[],
-    projectEmployees: IProjectEmployee[]
+    projectEmployees: IProjectEmployee[],
   ) {
     const totalEmployees = employees.filter((e) => e.isActive).length;
     const totalCapacity = totalEmployees * 100;
@@ -787,11 +799,11 @@ export class BusinessInsightsComponent implements OnInit {
         pe.isActive === 'Y' ||
         pe.isActive === 'y' ||
         pe.isActive === 'true' ||
-        String(pe.isActive).toLowerCase() === 'true'
+        String(pe.isActive).toLowerCase() === 'true',
     );
     const utilizedCapacity = activeAssignments.reduce(
       (sum, assignment) => sum + (assignment.allocationPct || 0),
-      0
+      0,
     );
 
     const availableCapacity = Math.max(0, totalCapacity - utilizedCapacity);
@@ -854,7 +866,7 @@ export class BusinessInsightsComponent implements OnInit {
   private calculateDepartmentBreakdown(
     projects: IProject[],
     employees: Employee[],
-    departmentFilter?: string
+    departmentFilter?: string,
   ) {
     const deptMap = new Map<
       string,
@@ -900,7 +912,7 @@ export class BusinessInsightsComponent implements OnInit {
       averageReadiness:
         data.readiness.length > 0
           ? Math.round(
-              data.readiness.reduce((a, b) => a + b, 0) / data.readiness.length
+              data.readiness.reduce((a, b) => a + b, 0) / data.readiness.length,
             )
           : 0,
     }));
@@ -929,14 +941,14 @@ export class BusinessInsightsComponent implements OnInit {
       averageReadiness:
         data.readiness.length > 0
           ? Math.round(
-              data.readiness.reduce((a, b) => a + b, 0) / data.readiness.length
+              data.readiness.reduce((a, b) => a + b, 0) / data.readiness.length,
             )
           : 0,
     }));
   }
 
   setActiveTab(
-    tab: 'overview' | 'projects' | 'resources' | 'financials'
+    tab: 'overview' | 'projects' | 'resources' | 'financials',
   ): void {
     this.activeTabSignal.set(tab);
   }
@@ -960,7 +972,7 @@ export class BusinessInsightsComponent implements OnInit {
     Object.entries(insights.projectStatusDistribution).forEach(
       ([status, count]) => {
         csvRows.push(`${status},${count}`);
-      }
+      },
     );
     csvRows.push('');
 
@@ -977,7 +989,7 @@ export class BusinessInsightsComponent implements OnInit {
     csvRows.push('Department,Employees,Projects,Avg Readiness');
     insights.departmentBreakdown.forEach((dept) => {
       csvRows.push(
-        `${dept.department},${dept.employeeCount},${dept.projectCount},${dept.averageReadiness}%`
+        `${dept.department},${dept.employeeCount},${dept.projectCount},${dept.averageReadiness}%`,
       );
     });
 
