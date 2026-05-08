@@ -5,12 +5,12 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { IProject } from '../../model/interface/master';
 import { MasterService } from '../../service/master.service';
 import { DatePipe, CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ToastService } from '@/app/components/ui/toast.service';
 import { UbButtonDirective } from '@/app/components/ui/button';
+import { ITask, TASKS_DATA } from '@/app/model/interface/master';
 
 @Component({
   selector: 'app-project',
@@ -27,7 +27,11 @@ export class ProjectComponent implements OnInit {
   private readonly toast = inject(ToastService);
   private readonly fb = inject(FormBuilder);
 
-  private readonly projectsSignal = signal<IProject[]>([]);
+  ngOnInit(): void {
+    console.log('sssssssss');
+    this.getProjects();
+  }
+  private readonly projectsSignal = signal<ITask[]>([]);
   readonly projects = this.projectsSignal.asReadonly();
   readonly searchTerm = signal<string>('');
   readonly filteredProjects = computed(() => {
@@ -37,7 +41,7 @@ export class ProjectComponent implements OnInit {
     }
     return this.projects().filter((project) => {
       return (
-        project.projectName?.toLowerCase().includes(term) ||
+        project.taskTitle?.toLowerCase().includes(term) ||
         project.clientName?.toLowerCase().includes(term) ||
         project.contactPerson?.toLowerCase().includes(term) ||
         project.startDate?.toLowerCase().includes(term)
@@ -59,25 +63,20 @@ export class ProjectComponent implements OnInit {
   expandedProjectId: number | null = null;
   editingProjectId: number | null = null;
   showCreatePanel = false;
-  pendingDelete: IProject | null = null;
+  pendingDelete: ITask | null = null;
   isSaving = false;
   isDeleting = false;
 
-  ngOnInit(): void {
-    this.getProjects();
-  }
-
   getProjects() {
-    this.masterSrv.getAllProjects().subscribe((Res: IProject[]) => {
-      this.projectsSignal.set(Res ?? []);
-      if (!this.expandedProjectId && Res?.length) {
-        this.expandedProjectId = Res[0].projectId ?? null;
-      }
-    });
+    this.projectsSignal.set(TASKS_DATA);
+
+    if (!this.expandedProjectId && TASKS_DATA.length) {
+      this.expandedProjectId = TASKS_DATA[0].taskId ?? null;
+    }
   }
 
   onEdit(id: number) {
-    const project = this.projects().find((p) => p.projectId === id);
+    const project = this.projects().find((p) => p.taskId === id);
     if (!project) {
       return;
     }
@@ -91,41 +90,41 @@ export class ProjectComponent implements OnInit {
   }
 
   onDelete(id: number) {
-    const project = this.projects().find((p) => p.projectId === id);
+    const project = this.projects().find((p) => p.taskId === id);
     if (!project) return;
     this.pendingDelete = project;
   }
 
   confirmDelete(confirmed: boolean) {
-    if (!confirmed || !this.pendingDelete?.projectId) {
-      this.pendingDelete = null;
-      return;
-    }
-    const { projectId, projectName } = this.pendingDelete;
-    this.isDeleting = true;
-    this.masterSrv.deleteProjectById(projectId).subscribe(
-      () => {
-        this.isDeleting = false;
-        this.pendingDelete = null;
-        this.projectsSignal.update((list) =>
-          list.filter((project) => project.projectId !== projectId)
-        );
-        this.toast.success({
-          title: 'Project deleted',
-          description: `${projectName} has been removed.`,
-        });
-        if (this.expandedProjectId === projectId) {
-          this.expandedProjectId = null;
-        }
-      },
-      () => {
-        this.isDeleting = false;
-        this.toast.error({
-          title: 'Delete failed',
-          description: 'Something went wrong while removing the project.',
-        });
-      }
-    );
+    // if (!confirmed || !this.pendingDelete?.projectId) {
+    //   this.pendingDelete = null;
+    //   return;
+    // }
+    // const { projectId, projectName } = this.pendingDelete;
+    // this.isDeleting = true;
+    // this.masterSrv.deleteProjectById(projectId).subscribe(
+    //   () => {
+    //     this.isDeleting = false;
+    //     this.pendingDelete = null;
+    //     this.projectsSignal.update((list) =>
+    //       list.filter((project) => project.projectId !== projectId)
+    //     );
+    //     this.toast.success({
+    //       title: 'Project deleted',
+    //       description: `${projectName} has been removed.`,
+    //     });
+    //     if (this.expandedProjectId === projectId) {
+    //       this.expandedProjectId = null;
+    //     }
+    //   },
+    //   () => {
+    //     this.isDeleting = false;
+    //     this.toast.error({
+    //       title: 'Delete failed',
+    //       description: 'Something went wrong while removing the project.',
+    //     });
+    //   }
+    // );
   }
 
   toggleExpand(projectId: number | null | undefined) {
@@ -179,61 +178,61 @@ export class ProjectComponent implements OnInit {
   }
 
   onSave() {
-    if (this.projectForm.invalid) {
-      this.toast.error({
-        title: 'Incomplete details',
-        description: 'Please fill all required fields before saving.',
-      });
-      return;
-    }
-    if (this.isSaving) {
-      return;
-    }
-    const project: IProject = {
-      ...this.projectForm.value,
-      startDate: this.projectForm.value.startDate,
-    };
-    this.isSaving = true;
-    if (project.projectId) {
-      this.masterSrv.updateProject(project).subscribe(
-        () => {
-          this.isSaving = false;
-          this.getProjects();
-          this.toast.success({
-            title: 'Project updated',
-            description: 'Changes have been saved successfully.',
-          });
-          this.cancelEdit();
-        },
-        () => {
-          this.isSaving = false;
-          this.toast.error({
-            title: 'Update failed',
-            description: 'Unable to update the project right now.',
-          });
-        }
-      );
-    } else {
-      this.masterSrv.saveProject(project as any).subscribe(
-        () => {
-          this.isSaving = false;
-          this.getProjects();
-          this.toast.success({
-            title: 'Project created',
-            description: 'A new project is now tracked in the system.',
-          });
-          this.showCreatePanel = false;
-          this.cancelEdit();
-        },
-        () => {
-          this.isSaving = false;
-          this.toast.error({
-            title: 'Creation failed',
-            description: 'Unable to create project right now.',
-          });
-        }
-      );
-    }
+    // if (this.projectForm.invalid) {
+    //   this.toast.error({
+    //     title: 'Incomplete details',
+    //     description: 'Please fill all required fields before saving.',
+    //   });
+    //   return;
+    // }
+    // if (this.isSaving) {
+    //   return;
+    // }
+    // const project: IProject = {
+    //   ...this.projectForm.value,
+    //   startDate: this.projectForm.value.startDate,
+    // };
+    // this.isSaving = true;
+    // if (project.projectId) {
+    //   this.masterSrv.updateProject(project).subscribe(
+    //     () => {
+    //       this.isSaving = false;
+    //       this.getProjects();
+    //       this.toast.success({
+    //         title: 'Project updated',
+    //         description: 'Changes have been saved successfully.',
+    //       });
+    //       this.cancelEdit();
+    //     },
+    //     () => {
+    //       this.isSaving = false;
+    //       this.toast.error({
+    //         title: 'Update failed',
+    //         description: 'Unable to update the project right now.',
+    //       });
+    //     }
+    //   );
+    // } else {
+    //   this.masterSrv.saveProject(project as any).subscribe(
+    //     () => {
+    //       this.isSaving = false;
+    //       this.getProjects();
+    //       this.toast.success({
+    //         title: 'Project created',
+    //         description: 'A new project is now tracked in the system.',
+    //       });
+    //       this.showCreatePanel = false;
+    //       this.cancelEdit();
+    //     },
+    //     () => {
+    //       this.isSaving = false;
+    //       this.toast.error({
+    //         title: 'Creation failed',
+    //         description: 'Unable to create project right now.',
+    //       });
+    //     }
+    //   );
+    // }
   }
 
   formattedDate(date: string | null | undefined) {

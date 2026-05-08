@@ -15,7 +15,6 @@
           type="search"
           placeholder="Search project, employee, role or date…"
           class="w-full rounded-2xl border border-white/15 bg-white/5 px-10 py-3 text-sm text-white/80 shadow-inner shadow-slate-950/30 outline-none transition focus:border-indigo-400/60 focus:bg-white/10 focus:text-white focus:shadow-[0_10px_30px_rgba(99,102,241,0.25)]"
-          (input)="updateSearch($any($event.target).value)"
         />
       </div>
     </div>
@@ -25,32 +24,31 @@
       <span
         class="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-medium"
       >
-        {{ filteredAssignments().length }} of {{ assignments().length }}
+        {{ 3 }} of {{ 5 }}
         assignments
       </span>
       <span
         class="rounded-full border border-emerald-400/30 bg-emerald-500/15 px-4 py-2 text-xs font-medium text-emerald-200"
       >
-        Active: {{ metrics().active }}
+        Active: {{ 2 }}
       </span>
       <span
         class="rounded-full border border-slate-400/30 bg-slate-500/20 px-4 py-2 text-xs font-medium text-slate-200"
       >
-        Inactive: {{ metrics().inactive }}
+        Inactive: {{ 3 }}
       </span>
       <button
         ubButton
         size="sm"
         class="bg-gradient-to-r from-sky-500 via-indigo-500 to-purple-500 text-white shadow-[0_20px_45px_rgba(14,116,244,0.35)]"
-        (click)="toggleCreatePanel()"
       >
-        {{ showCreatePanel ? 'Close form' : 'Add assignment' }}
+        {{ "Add assignment" }}
       </button>
     </div>
   </section>
 
   <section
-    *ngIf="showCreatePanel"
+    *ngIf="true"
     class="rounded-[26px] border border-white/10 bg-white/5/80 p-6 shadow-[0_35px_90px_rgba(9,14,33,0.55)] backdrop-blur-xl"
   >
     <header class="mb-6">
@@ -59,12 +57,7 @@
         Connect team members to initiatives
       </p>
     </header>
-    <form
-      [formGroup]="projectEmployeeForm"
-      (ngSubmit)="onSave()"
-      class="grid gap-4 md:grid-cols-2"
-      [class.opacity-50]="isSaving"
-    >
+    <form (ngSubmit)="onSave()" class="grid gap-4 md:grid-cols-2" [formGroup]="taskEmployeeForm">
       <div>
         <label
           for="create-project"
@@ -77,8 +70,8 @@
           class="w-full rounded-2xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white/85 outline-none transition focus:border-indigo-400/60 focus:bg-white/10 focus:text-white"
         >
           <option value="">Select project</option>
-          <option *ngFor="let project of projects()" [ngValue]="project.projectId">
-            {{ project.projectName }}
+          <option *ngFor="let task of tasks()" [ngValue]="task.id">
+            {{ task.title }}
           </option>
         </select>
       </div>
@@ -94,8 +87,8 @@
           class="w-full rounded-2xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white/85 outline-none transition focus:border-indigo-400/60 focus:bg-white/10 focus:text-white"
         >
           <option value="">Select teammate</option>
-          <option *ngFor="let employee of employees()" [ngValue]="employee.employeeId">
-            {{ employee.employeeName }}
+          <option *ngFor="let employee of employees()" [ngValue]="employee.id">
+            {{ employee.fullName }}
           </option>
         </select>
       </div>
@@ -143,9 +136,9 @@
         />
         <p
           *ngIf="
-            projectEmployeeForm.controls['allocationPct'].invalid &&
-            (projectEmployeeForm.controls['allocationPct'].dirty ||
-              projectEmployeeForm.controls['allocationPct'].touched)
+            taskEmployeeForm.controls['allocationPct'].invalid &&
+            (taskEmployeeForm.controls['allocationPct'].dirty ||
+              taskEmployeeForm.controls['allocationPct'].touched)
           "
           class="mt-1 text-xs text-rose-300"
         >
@@ -159,18 +152,24 @@
         <button
           type="button"
           class="relative inline-flex h-9 w-16 items-center rounded-full border border-white/15 bg-white/10 px-1 transition focus:outline-none focus:ring-2 focus:ring-indigo-400"
-          (click)="projectEmployeeForm.patchValue({ isActive: !projectEmployeeForm.value.isActive })"
+          (click)="
+            taskEmployeeForm.patchValue({
+              isActive: !taskEmployeeForm.value.isActive,
+            })
+          "
           [ngClass]="{
-            'bg-emerald-500/30': projectEmployeeForm.value.isActive
+            'bg-emerald-500/30': taskEmployeeForm.value.isActive,
           }"
         >
           <span
             class="h-7 w-7 rounded-full bg-white/80 transition"
-            [class.translate-x-7]="projectEmployeeForm.value.isActive"
+            [class.translate-x-7]="taskEmployeeForm.value.isActive"
           ></span>
         </button>
         <span class="text-xs text-white/70">
-          {{ projectEmployeeForm.value.isActive ? 'Active assignment' : 'Inactive' }}
+          {{
+            taskEmployeeForm.value.isActive ? "Active assignment" : "Inactive"
+          }}
         </span>
       </div>
       <div class="md:col-span-2">
@@ -192,18 +191,18 @@
           type="submit"
           ubButton
           size="sm"
-          [disabled]="isSaving"
+          [disabled]="false"
           class="bg-gradient-to-r from-emerald-500 via-green-500 to-lime-500 text-white shadow-[0_20px_45px_rgba(34,197,94,0.35)] disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <span *ngIf="!isSaving">Save assignment</span>
-          <span *ngIf="isSaving">Saving assignment...</span>
+          <span *ngIf="!false">Save assignment</span>
+          <span *ngIf="true">Saving assignment...</span>
         </button>
       </div>
     </form>
   </section>
 
   <section class="space-y-4">
-    <div
+    <!-- <div
       *ngFor="let item of filteredAssignments()"
       class="overflow-hidden rounded-[26px] border border-white/10 bg-white/5/75 shadow-[0_30px_80px_rgba(10,15,35,0.5)] backdrop-blur-xl transition duration-200 hover:border-white/20"
     >
@@ -268,10 +267,10 @@
               >
                 <option value="">Select project</option>
                 <option
-                  *ngFor="let project of projects()"
-                  [ngValue]="project.projectId"
+                  *ngFor="let task of tasks()"
+                  [ngValue]="task.id""
                 >
-                  {{ project.projectName }}
+                  {{ task.title }}
                 </option>
               </select>
             </div>
@@ -289,9 +288,9 @@
                 <option value="">Select teammate</option>
                 <option
                   *ngFor="let employee of employees()"
-                  [ngValue]="employee.employeeId"
+                  [ngValue]="employee.id"
                 >
-                  {{ employee.employeeName }}
+                  {{ employee.fullName }}
                 </option>
               </select>
             </div>
@@ -475,18 +474,18 @@
           </div>
         </ng-template>
       </div>
-    </div>
+    </div> -->
 
-    <div
+    <!-- <div
       *ngIf="!filteredAssignments().length"
       class="rounded-[26px] border border-dashed border-white/15 bg-white/5/60 px-6 py-12 text-center text-sm text-white/60 backdrop-blur-lg"
     >
       No assignments match your filters.
-    </div>
+    </div> -->
   </section>
 </div>
 
-<div
+<!-- <div
   *ngIf="pendingDelete as assignment"
   class="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-950/70 px-4 py-4"
   style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; overflow-y: auto; display: flex; align-items: center; justify-content: center;"
@@ -521,4 +520,4 @@
       </button>
     </div>
   </div>
-</div>
+</div> -->

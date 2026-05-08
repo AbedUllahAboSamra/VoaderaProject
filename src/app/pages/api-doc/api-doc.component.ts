@@ -96,23 +96,23 @@ export class ApiDocComponent implements OnInit {
   }
 
   loadApiDocumentation(): void {
-    this.loadingSignal.set(true);
-    this.errorSignal.set(null);
+    // this.loadingSignal.set(true);
+    // this.errorSignal.set(null);
 
-    this.masterService.getApiDocumentation().subscribe({
-      next: (data) => {
-        console.log('API Documentation loaded:', data);
-        this.apiDocSignal.set(data);
-        this.loadingSignal.set(false);
-      },
-      error: (error) => {
-        console.error('Error loading API documentation:', error);
-        this.errorSignal.set(
-          error?.message || 'Failed to load API documentation'
-        );
-        this.loadingSignal.set(false);
-      },
-    });
+    // this.masterService.getApiDocumentation().subscribe({
+    //   next: (data) => {
+    //     console.log('API Documentation loaded:', data);
+    //     this.apiDocSignal.set(data);
+    //     this.loadingSignal.set(false);
+    //   },
+    //   error: (error) => {
+    //     console.error('Error loading API documentation:', error);
+    //     this.errorSignal.set(
+    //       error?.message || 'Failed to load API documentation'
+    //     );
+    //     this.loadingSignal.set(false);
+    //   },
+    // });
   }
 
   setActiveTab(tab: 'GET' | 'POST' | 'PUT' | 'DELETE'): void {

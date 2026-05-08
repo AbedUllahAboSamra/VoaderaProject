@@ -79,7 +79,7 @@ export class CalendarTimelineComponent implements OnInit {
   readonly calendarEvents = computed(() => {
     const data = this.scheduleData();
     if (!data) return [];
-    
+
     const events: Array<{
       id: string;
       title: string;
@@ -166,17 +166,17 @@ export class CalendarTimelineComponent implements OnInit {
   }
 
   loadScheduleData(): void {
-    this.loadingSignal.set(true);
-    this.masterService.getScheduleData().subscribe({
-      next: (data: IScheduleData) => {
-        this.scheduleDataSignal.set(data);
-        this.loadingSignal.set(false);
-      },
-      error: (error) => {
-        console.error('Error loading schedule data:', error);
-        this.loadingSignal.set(false);
-      },
-    });
+    // this.loadingSignal.set(true);
+    // this.masterService.getScheduleData().subscribe({
+    //   next: (data: IScheduleData) => {
+    //     this.scheduleDataSignal.set(data);
+    //     this.loadingSignal.set(false);
+    //   },
+    //   error: (error) => {
+    //     console.error('Error loading schedule data:', error);
+    //     this.loadingSignal.set(false);
+    //   },
+    // });
   }
 
   setActiveTab(tab: 'calendar' | 'timeline' | 'gantt'): void {

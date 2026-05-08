@@ -95,8 +95,8 @@ export class BusinessInsightsComponent implements OnInit {
     const employees = this.employeesSignal();
     const departments = new Set<string>();
     employees.forEach((emp) => {
-      if (emp.department && emp.department.trim()) {
-        departments.add(emp.department);
+      if (emp.departmentId && emp.departmentId.toString().trim()) {
+        departments.add(emp.departmentId.toString());
       }
     });
     return Array.from(departments).sort();
@@ -124,60 +124,60 @@ export class BusinessInsightsComponent implements OnInit {
   }
 
   loadData(): void {
-    this.loadingSignal.set(true);
+    // this.loadingSignal.set(true);
 
-    let projectsLoaded = false;
-    let employeesLoaded = false;
-    let projectEmployeesLoaded = false;
+    // let projectsLoaded = false;
+    // let employeesLoaded = false;
+    // let projectEmployeesLoaded = false;
 
-    const checkAndCalculate = () => {
-      if (projectsLoaded && employeesLoaded && projectEmployeesLoaded) {
-        this.calculateInsights();
-      }
-    };
+    // const checkAndCalculate = () => {
+    //   if (projectsLoaded && employeesLoaded && projectEmployeesLoaded) {
+    //     this.calculateInsights();
+    //   }
+    // };
 
-    // Load projects, employees, and project-employees in parallel
-    this.masterService.getAllProjects().subscribe({
-      next: (projects) => {
-        this.projectsSignal.set(projects);
-        projectsLoaded = true;
-        checkAndCalculate();
-      },
-      error: (error) => {
-        console.error('[Business Insights] Failed to load projects', error);
-        this.loadingSignal.set(false);
-      },
-    });
+    // // Load projects, employees, and project-employees in parallel
+    // this.masterService.getAllProjects().subscribe({
+    //   next: (projects) => {
+    //     this.projectsSignal.set(projects);
+    //     projectsLoaded = true;
+    //     checkAndCalculate();
+    //   },
+    //   error: (error) => {
+    //     console.error('[Business Insights] Failed to load projects', error);
+    //     this.loadingSignal.set(false);
+    //   },
+    // });
 
-    this.masterService.getAllEmp().subscribe({
-      next: (employees) => {
-        this.employeesSignal.set(employees);
-        employeesLoaded = true;
-        checkAndCalculate();
-      },
-      error: (error) => {
-        console.error('[Business Insights] Failed to load employees', error);
-        this.loadingSignal.set(false);
-      },
-    });
+    // this.masterService.getAllEmp().subscribe({
+    //   next: (employees) => {
+    //     this.employeesSignal.set(employees);
+    //     employeesLoaded = true;
+    //     checkAndCalculate();
+    //   },
+    //   error: (error) => {
+    //     console.error('[Business Insights] Failed to load employees', error);
+    //     this.loadingSignal.set(false);
+    //   },
+    // });
 
-    this.masterService.getProjectEmp().subscribe({
-      next: (projectEmployees) => {
-        this.projectEmployeesSignal.set(projectEmployees);
-        projectEmployeesLoaded = true;
-        checkAndCalculate();
-      },
-      error: (error) => {
-        console.error(
-          '[Business Insights] Failed to load project employees',
-          error
-        );
-        // Don't fail completely, just use empty array
-        this.projectEmployeesSignal.set([]);
-        projectEmployeesLoaded = true;
-        checkAndCalculate();
-      },
-    });
+    // this.masterService.getProjectEmp().subscribe({
+    //   next: (projectEmployees) => {
+    //     this.projectEmployeesSignal.set(projectEmployees);
+    //     projectEmployeesLoaded = true;
+    //     checkAndCalculate();
+    //   },
+    //   error: (error) => {
+    //     console.error(
+    //       '[Business Insights] Failed to load project employees',
+    //       error
+    //     );
+    //     // Don't fail completely, just use empty array
+    //     this.projectEmployeesSignal.set([]);
+    //     projectEmployeesLoaded = true;
+    //     checkAndCalculate();
+    //   },
+    // });
   }
 
   calculateInsights(): void {
@@ -216,12 +216,12 @@ export class BusinessInsightsComponent implements OnInit {
     if (filters.department && filters.department !== 'all') {
       // Filter employees by department
       filteredEmployees = filteredEmployees.filter(
-        (emp) => emp.department === filters.department
+        (emp) => emp.departmentId === filters.department
       );
 
       // Filter project-employee assignments by department
       const employeeIdsInDept = new Set(
-        filteredEmployees.map((e) => e.employeeId)
+        filteredEmployees.map((e) => e.id)
       );
       allProjectEmployees = allProjectEmployees.filter((pe) => {
         return employeeIdsInDept.has(pe.empId);
@@ -365,7 +365,7 @@ export class BusinessInsightsComponent implements OnInit {
         });
 
         filteredEmployees = filteredEmployees.filter((emp) => {
-          return employeeIdsInFilteredProjects.has(emp.employeeId);
+          return employeeIdsInFilteredProjects.has(emp.id);
         });
       }
       // If custom range is selected but no dates provided, skip date filtering
@@ -377,8 +377,8 @@ export class BusinessInsightsComponent implements OnInit {
     if (filters.department && filters.department !== 'all') {
       const employeeIdsInDept = new Set(
         employees
-          .filter((e) => e.department === filters.department)
-          .map((e) => e.employeeId)
+          .filter((e) => e.departmentId === filters.department)
+          .map((e) => e.id)
       );
       filteredArchivedProjects = archivedProjects.filter((p) => {
         const hasDeptLead =
@@ -457,8 +457,8 @@ export class BusinessInsightsComponent implements OnInit {
     if (filters.department && filters.department !== 'all') {
       const employeeIdsInDept = new Set(
         employees
-          .filter((e) => e.department === filters.department && e.isActive)
-          .map((e) => e.employeeId)
+          .filter((e) => e.departmentId === filters.department && e.isActive)
+          .map((e) => e.id)
       );
       projectIdsWithDeptActiveAssignments = new Set(
         activeProjectEmployees
@@ -659,7 +659,7 @@ export class BusinessInsightsComponent implements OnInit {
     // Count available employees (no assignments or allocation = 0)
     const assignedEmployeeIds = new Set(employeeAllocations.keys());
     const availableCount = employees.filter(
-      (e) => e.isActive && !assignedEmployeeIds.has(e.employeeId)
+      (e) => e.isActive && !assignedEmployeeIds.has(e.id)
     ).length;
 
     return {
@@ -862,7 +862,7 @@ export class BusinessInsightsComponent implements OnInit {
     >();
 
     employees.forEach((emp) => {
-      const dept = emp.department || 'Unassigned';
+      const dept = emp.departmentId.toString() || 'Unassigned';
       if (!deptMap.has(dept)) {
         deptMap.set(dept, { employees: 0, projects: 0, readiness: [] });
       }
@@ -878,8 +878,8 @@ export class BusinessInsightsComponent implements OnInit {
         dept = departmentFilter;
       } else {
         // When showing all departments, group by lead's department
-        const lead = employees.find((e) => e.employeeId === p.leadByEmpId);
-        dept = lead?.department || 'Unassigned';
+        const lead = employees.find((e) => e.id === p.leadByEmpId);
+        dept = lead?.departmentId.toString() || 'Unassigned';
       }
 
       if (deptMap.has(dept)) {

@@ -1,4 +1,14 @@
 import {
+  IContentfulBrief,
+  IAiOverviewDraft,
+  IExternalIntegrationReference,
+  ITimelineEntry,
+  ITaskStatusHistoryEntry,
+  IReviewerCommentEntry,
+  ITaskResourceAssignment,
+  IResourceAssignmentDigest,
+} from './../../model/interface/master';
+import {
   Component,
   DestroyRef,
   OnInit,
@@ -19,20 +29,12 @@ import { CommonModule } from '@angular/common';
 import { MasterService } from '../../service/master.service';
 import {
   ApprovalStatus,
-  IProject,
   IReadinessChecklistItem,
   IReadinessChecklistState,
-  IReviewerCommentEntry,
-  IStatusHistoryEntry,
-  ITimelineEntry,
-  IProjectResourceInsights,
-  IProjectResourceAssignment,
-  IResourceAssignmentDigest,
   IResourceProfile,
-  IProjectOverview,
-  IContentfulBrief,
-  IAiOverviewDraft,
-  IExternalIntegrationReference,
+  ITask,
+  ITaskOverview,
+  ITaskResourceInsights,
   ReadinessStatus,
   ResourceLoadStatus,
   SectionId,
@@ -164,12 +166,12 @@ export class ProjectFormComponent implements OnInit {
   private readonly employeesSignal = signal<Employee[]>([]);
   readonly employees = this.employeesSignal.asReadonly();
 
-  private readonly currentProjectSignal = signal<IProject | null>(null);
+  private readonly currentProjectSignal = signal<ITask | null>(null);
   readonly currentProject = this.currentProjectSignal.asReadonly();
 
   private resourceInsightsRequestToken = 0;
   private readonly resourceInsightsSignal =
-    signal<IProjectResourceInsights | null>(null);
+    signal<ITaskResourceInsights | null>(null);
   readonly resourceInsights = this.resourceInsightsSignal.asReadonly();
 
   private readonly modeSignal = signal<'create' | 'edit'>('create');
@@ -178,26 +180,26 @@ export class ProjectFormComponent implements OnInit {
   readonly readinessTasks = readinessTaskDefinitions;
   readonly readinessTotal = this.readinessTasks.length;
   readonly readinessStatuses = Object.entries(READINESS_STATUS_LABELS).map(
-    ([value, label]) => ({ value: value as ReadinessStatus, label })
+    ([value, label]) => ({ value: value as ReadinessStatus, label }),
   );
   readonly readinessForm = this.fb.group(
-    this.buildReadinessControls()
+    this.buildReadinessControls(),
   ) as unknown as FormGroup<Record<ReadinessTaskId, ReadinessTaskFormGroup>>;
   private readonly readinessFormValue = signal<ReadinessFormValue>(
-    this.readinessForm.getRawValue() as ReadinessFormValue
+    this.readinessForm.getRawValue() as ReadinessFormValue,
   );
   private readonly readinessBaseline = signal<IReadinessChecklistState | null>(
-    null
+    null,
   );
   readonly readinessView = computed(() =>
-    this.buildReadinessView(this.readinessFormValue())
+    this.buildReadinessView(this.readinessFormValue()),
   );
   readonly readinessProgress = computed(() => this.readinessView().percent);
   readonly readinessCompleted = computed(
-    () => this.readinessView().completedItems
+    () => this.readinessView().completedItems,
   );
   readonly readinessRemaining = computed(
-    () => this.readinessView().remainingItems
+    () => this.readinessView().remainingItems,
   );
 
   readonly approvalForm = this.fb.group({
@@ -222,7 +224,7 @@ export class ProjectFormComponent implements OnInit {
   });
 
   private readonly overviewMetadataSignal =
-    signal<Partial<IProjectOverview> | null>(null);
+    signal<Partial<ITaskOverview> | null>(null);
 
   readonly contentfulForm = this.fb.group({
     entryId: [''],
@@ -240,23 +242,24 @@ export class ProjectFormComponent implements OnInit {
   readonly aiError = signal<string | null>(null);
   readonly aiDraft = signal<IAiOverviewDraft | null>(null);
 
-  private readonly cmsReferencesSignal =
-    signal<IExternalIntegrationReference[]>([]);
+  private readonly cmsReferencesSignal = signal<
+    IExternalIntegrationReference[]
+  >([]);
   readonly cmsReferences = this.cmsReferencesSignal.asReadonly();
 
   readonly approvalStatus = computed<ApprovalStatus>(() =>
-    this.normalizeApprovalStatus(this.currentProjectSignal()?.approvalStatus)
+    this.normalizeApprovalStatus(this.currentProjectSignal()?.approvalStatus),
   );
-  readonly approvalHistory = computed<IStatusHistoryEntry[]>(() => {
+  readonly approvalHistory = computed<ITaskStatusHistoryEntry[]>(() => {
     const history = this.currentProjectSignal()?.statusHistory ?? [];
     return [...history].sort((a, b) =>
-      (b.changedAt ?? '').localeCompare(a.changedAt ?? '')
+      (b.changedAt ?? '').localeCompare(a.changedAt ?? ''),
     );
   });
   readonly approvalTimeline = computed<ITimelineEntry[]>(() => {
     const events = this.currentProjectSignal()?.timeline ?? [];
     return [...events].sort((a, b) =>
-      (b.occurredAt ?? '').localeCompare(a.occurredAt ?? '')
+      (b.occurredAt ?? '').localeCompare(a.occurredAt ?? ''),
     );
   });
   readonly reviewerComments = computed<IReviewerCommentEntry[]>(() => {
@@ -270,12 +273,12 @@ export class ProjectFormComponent implements OnInit {
   });
   readonly canRequestApproval = computed(
     () =>
-      this.approvalStatus() === 'draft' || this.approvalStatus() === 'rejected'
+      this.approvalStatus() === 'draft' || this.approvalStatus() === 'rejected',
   );
   readonly canApprove = computed(() => this.approvalStatus() === 'in_review');
   readonly canReject = this.canApprove;
   readonly canResetApproval = computed(() =>
-    ['approved', 'rejected'].includes(this.approvalStatus())
+    ['approved', 'rejected'].includes(this.approvalStatus()),
   );
   readonly approvalProcessing = signal<boolean>(false);
   readonly reviewerCommentProcessing = signal<boolean>(false);
@@ -311,16 +314,16 @@ export class ProjectFormComponent implements OnInit {
   });
   private readonly projectNameValue = toSignal(
     this.projectForm.controls['projectName'].valueChanges.pipe(
-      startWith(this.projectForm.controls['projectName'].value ?? '')
+      startWith(this.projectForm.controls['projectName'].value ?? ''),
     ),
-    { initialValue: this.projectForm.controls['projectName'].value ?? '' }
+    { initialValue: this.projectForm.controls['projectName'].value ?? '' },
   );
 
   private readonly formChangeSignal = toSignal(
     this.projectForm.valueChanges.pipe(
-      startWith(this.projectForm.getRawValue())
+      startWith(this.projectForm.getRawValue()),
     ),
-    { initialValue: this.projectForm.getRawValue() }
+    { initialValue: this.projectForm.getRawValue() },
   );
 
   readonly expandedSection = signal<SectionId | null>('overview');
@@ -352,7 +355,7 @@ export class ProjectFormComponent implements OnInit {
     if (name.length > 0) {
       return name;
     }
-    const fallback = this.currentProjectSignal()?.projectName?.toString().trim();
+    const fallback = this.currentProjectSignal()?.taskTitle?.toString().trim();
     return fallback && fallback.length > 0 ? fallback : 'Untitled project';
   });
 
@@ -364,18 +367,18 @@ export class ProjectFormComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.readinessFormValue.set(
-          this.readinessForm.getRawValue() as ReadinessFormValue
+          this.readinessForm.getRawValue() as ReadinessFormValue,
         );
       });
-    this.overviewDetailsForm.valueChanges
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        if (!this.overviewDetailsForm.pristine) {
-          this.overviewMetadataSignal.set({
-            aiDraftSource: 'manual',
-          });
-        }
-      });
+    // this.overviewDetailsForm.valueChanges
+    //   .pipe(takeUntilDestroyed(this.destroyRef))
+    //   .subscribe(() => {
+    //     if (!this.overviewDetailsForm.pristine) {
+    //       this.overviewMetadataSignal.set({
+    //         aiDraftSource: 'manual',
+    //       });
+    //     }
+    //   });
     this.activatedRoute.params.subscribe((params) => {
       const idParam = params['id'];
       const parsedId =
@@ -410,7 +413,7 @@ export class ProjectFormComponent implements OnInit {
 
   toggleSection(section: SectionId) {
     this.expandedSection.update((current) =>
-      current === section ? null : section
+      current === section ? null : section,
     );
     if (
       section !== 'approval' &&
@@ -433,8 +436,8 @@ export class ProjectFormComponent implements OnInit {
     const current = this.currentProjectSignal();
     if (current) {
       this.projectForm.patchValue({
-        projectId: current.projectId,
-        projectName: current.projectName,
+        projectId: current.taskId,
+        projectName: current.taskTitle,
         clientName: current.clientName,
         startDate: current.startDate?.substring(0, 10),
         leadByEmpId: current.leadByEmpId ?? null,
@@ -491,54 +494,52 @@ export class ProjectFormComponent implements OnInit {
   }
 
   submitProject(onSuccess?: () => void) {
-    if (this.projectForm.invalid) {
-      this.projectForm.markAllAsTouched();
-      this.toast.error({
-        title: 'Incomplete details',
-        description: 'Please resolve validation warnings before continuing.',
-      });
-      return;
-    }
-    const readinessChecklist = this.buildReadinessPayload();
-    const payload: IProject = {
-      ...(this.currentProjectSignal() ?? {}),
-      ...this.projectForm.getRawValue(),
-      readinessChecklist,
-      readinessScore: readinessChecklist.percent,
-      overview: this.buildOverviewPayload(),
-      cmsContentRefs: this.cmsReferencesSignal(),
-    };
-    this.isSaving.set(true);
-
-    const request$ =
-      payload.projectId && payload.projectId !== 0
-        ? this.masterService.updateProject(payload)
-        : this.masterService.saveProject(payload as any);
-
-    request$.subscribe({
-      next: (res) => {
-        this.isSaving.set(false);
-        console.log('[Approval] project save completed', {
-          projectId: res.projectId,
-        });
-        this.hydrateProject(res);
-        if (res.projectId && res.projectId > 0) {
-          this.router.navigate(['/update-project', res.projectId], {
-            replaceUrl: true,
-          });
-        }
-        if (onSuccess) {
-          onSuccess();
-        }
-      },
-      error: () => {
-        this.isSaving.set(false);
-        this.toast.error({
-          title: 'Save failed',
-          description: 'Unable to persist changes right now. Try again later.',
-        });
-      },
-    });
+    // if (this.projectForm.invalid) {
+    //   this.projectForm.markAllAsTouched();
+    //   this.toast.error({
+    //     title: 'Incomplete details',
+    //     description: 'Please resolve validation warnings before continuing.',
+    //   });
+    //   return;
+    // }
+    // const readinessChecklist = this.buildReadinessPayload();
+    // const payload: ITask = {
+    //   ...(this.currentProjectSignal() ?? {}),
+    //   ...this.projectForm.getRawValue(),
+    //   readinessChecklist,
+    //   readinessScore: readinessChecklist.percent,
+    //   overview: this.buildOverviewPayload(),
+    //   cmsContentRefs: this.cmsReferencesSignal(),
+    // };
+    // this.isSaving.set(true);
+    // const request$ =
+    //   payload.projectId && payload.projectId !== 0
+    //     ? this.masterService.updateProject(payload)
+    //     : this.masterService.saveProject(payload as any);
+    // request$.subscribe({
+    //   next: (res) => {
+    //     this.isSaving.set(false);
+    //     console.log('[Approval] project save completed', {
+    //       projectId: res.projectId,
+    //     });
+    //     this.hydrateProject(res);
+    //     if (res.projectId && res.projectId > 0) {
+    //       this.router.navigate(['/update-project', res.projectId], {
+    //         replaceUrl: true,
+    //       });
+    //     }
+    //     if (onSuccess) {
+    //       onSuccess();
+    //     }
+    //   },
+    //   error: () => {
+    //     this.isSaving.set(false);
+    //     this.toast.error({
+    //       title: 'Save failed',
+    //       description: 'Unable to persist changes right now. Try again later.',
+    //     });
+    //   },
+    // });
   }
 
   requestDelete() {
@@ -549,42 +550,41 @@ export class ProjectFormComponent implements OnInit {
   }
 
   confirmDelete(confirmed: boolean) {
-    if (!confirmed) {
-      this.pendingDelete.set(false);
-      return;
-    }
-    const projectId = this.projectForm.controls['projectId'].value;
-    if (!projectId) {
-      this.pendingDelete.set(false);
-      return;
-    }
-    this.isDeleting.set(true);
-    this.masterService.deleteProjectById(projectId).subscribe({
-      next: () => {
-        this.isDeleting.set(false);
-        this.pendingDelete.set(false);
-        this.toast.success({
-          title: 'Project removed',
-          description: 'The project has been archived successfully.',
-        });
-        this.resetReadinessForm();
-        this.resourceInsightsSignal.set(null);
-        this.router.navigate(['/projects']);
-      },
-      error: () => {
-        this.isDeleting.set(false);
-        this.toast.error({
-          title: 'Delete failed',
-          description: 'Unable to archive the project currently.',
-        });
-      },
-    });
+    // if (!confirmed) {
+    //   this.pendingDelete.set(false);
+    //   return;
+    // }
+    // const projectId = this.projectForm.controls['projectId'].value;
+    // if (!projectId) {
+    //   this.pendingDelete.set(false);
+    //   return;
+    // }
+    // this.isDeleting.set(true);
+    // this.masterService.deleteProjectById(projectId).subscribe({
+    //   next: () => {
+    //     this.isDeleting.set(false);
+    //     this.pendingDelete.set(false);
+    //     this.toast.success({
+    //       title: 'Project removed',
+    //       description: 'The project has been archived successfully.',
+    //     });
+    //     this.resetReadinessForm();
+    //     this.resourceInsightsSignal.set(null);
+    //     this.router.navigate(['/projects']);
+    //   },
+    //   error: () => {
+    //     this.isDeleting.set(false);
+    //     this.toast.error({
+    //       title: 'Delete failed',
+    //       description: 'Unable to archive the project currently.',
+    //     });
+    //   },
+    // });
   }
 
   leadName(leadByEmpId: number | null | undefined) {
     if (!leadByEmpId) return null;
-    return this.employees().find((emp) => emp.employeeId === leadByEmpId)
-      ?.employeeName;
+    return this.employees().find((emp) => emp.id === leadByEmpId)?.fullName;
   }
 
   displayValue(field: FieldKey) {
@@ -602,7 +602,7 @@ export class ProjectFormComponent implements OnInit {
         return new Intl.DateTimeFormat('de-DE').format(date);
       case 'leadByEmpId':
         return value
-          ? this.leadName(value) ?? `Employee #${value}`
+          ? (this.leadName(value) ?? `Employee #${value}`)
           : 'Unassigned';
       case 'contactNo':
         return value || 'Not provided';
@@ -685,8 +685,8 @@ export class ProjectFormComponent implements OnInit {
     });
   }
 
-  trackAssignmentById(_: number, assignment: IProjectResourceAssignment) {
-    return assignment.empProjectId;
+  trackAssignmentById(_: number, assignment: ITaskResourceAssignment) {
+    return assignment.empTaskId;
   }
 
   trackResourceByEmployee(_: number, resource: IResourceProfile) {
@@ -708,10 +708,7 @@ export class ProjectFormComponent implements OnInit {
       profile.allocation && profile.allocation.availablePct !== undefined
         ? Math.max(
             5,
-            Math.min(
-              Math.round(profile.allocation.availablePct),
-              200
-            )
+            Math.min(Math.round(profile.allocation.availablePct), 200),
           )
         : 25;
     this.collaboratorAssignmentForm.reset(
@@ -719,12 +716,12 @@ export class ProjectFormComponent implements OnInit {
         role: profile.role?.length
           ? profile.role
           : profile.title?.length
-          ? profile.title
-          : 'Contributor',
+            ? profile.title
+            : 'Contributor',
         allocationPct: suggestedAllocation,
         assignedDate: this.todayString(),
       },
-      { emitEvent: false }
+      { emitEvent: false },
     );
     this.collaboratorAssignmentForm.markAsPristine();
     console.log('[Resource] starting collaborator assignment', {
@@ -741,70 +738,67 @@ export class ProjectFormComponent implements OnInit {
         allocationPct: 25,
         assignedDate: this.todayString(),
       },
-      { emitEvent: false }
+      { emitEvent: false },
     );
   }
 
   submitCollaboratorAssignment() {
-    const profile = this.collaboratorAssignmentProfileSignal();
-    const project = this.currentProjectSignal();
-    if (!profile || !project?.projectId) {
-      return;
-    }
-
-    if (this.collaboratorAssignmentForm.invalid) {
-      this.collaboratorAssignmentForm.markAllAsTouched();
-      this.toast.error({
-        title: 'Missing details',
-        description: 'Provide role, allocation, and a start date.',
-      });
-      return;
-    }
-
-    const value = this.collaboratorAssignmentForm.getRawValue();
-    const payload = {
-      projectId: project.projectId,
-      empId: profile.employeeId,
-      role: (value.role ?? '').trim() || profile.role || 'Contributor',
-      allocationPct:
-        value.allocationPct !== null && value.allocationPct !== undefined
-          ? Number(value.allocationPct)
-          : 0,
-      assignedDate: value.assignedDate,
-      isActive: 'Y',
-    };
-
-    this.collaboratorAssignmentProcessing.set(true);
-    this.masterService.saveProjectEmp(payload as any).subscribe({
-      next: () => {
-        this.collaboratorAssignmentProcessing.set(false);
-        this.toast.success({
-          title: 'Contributor added',
-          description: `${profile.employeeName} has been assigned to the project.`,
-        });
-        console.log('[Resource] collaborator assignment saved', {
-          projectId: project.projectId,
-          empId: profile.employeeId,
-          allocation: payload.allocationPct,
-        });
-        this.cancelCollaboratorAssignment();
-        this.refreshProjectSnapshot(project.projectId);
-        this.loadResourceInsights(project.projectId);
-      },
-      error: (error) => {
-        this.collaboratorAssignmentProcessing.set(false);
-        this.toast.error({
-          title: 'Assignment failed',
-          description:
-            'Unable to create the assignment right now. Please try again.',
-        });
-        console.error('[Resource] collaborator assignment failed', {
-          projectId: project.projectId,
-          empId: profile.employeeId,
-          error,
-        });
-      },
-    });
+    // const profile = this.collaboratorAssignmentProfileSignal();
+    // const project = this.currentProjectSignal();
+    // if (!profile || !project?.projectId) {
+    //   return;
+    // }
+    // if (this.collaboratorAssignmentForm.invalid) {
+    //   this.collaboratorAssignmentForm.markAllAsTouched();
+    //   this.toast.error({
+    //     title: 'Missing details',
+    //     description: 'Provide role, allocation, and a start date.',
+    //   });
+    //   return;
+    // }
+    // const value = this.collaboratorAssignmentForm.getRawValue();
+    // const payload = {
+    //   projectId: project.projectId,
+    //   empId: profile.employeeId,
+    //   role: (value.role ?? '').trim() || profile.role || 'Contributor',
+    //   allocationPct:
+    //     value.allocationPct !== null && value.allocationPct !== undefined
+    //       ? Number(value.allocationPct)
+    //       : 0,
+    //   assignedDate: value.assignedDate,
+    //   isActive: 'Y',
+    // };
+    // this.collaboratorAssignmentProcessing.set(true);
+    // this.masterService.saveProjectEmp(payload as any).subscribe({
+    //   next: () => {
+    //     this.collaboratorAssignmentProcessing.set(false);
+    //     this.toast.success({
+    //       title: 'Contributor added',
+    //       description: `${profile.employeeName} has been assigned to the project.`,
+    //     });
+    //     console.log('[Resource] collaborator assignment saved', {
+    //       projectId: project.projectId,
+    //       empId: profile.employeeId,
+    //       allocation: payload.allocationPct,
+    //     });
+    //     this.cancelCollaboratorAssignment();
+    //     this.refreshProjectSnapshot(project.projectId);
+    //     this.loadResourceInsights(project.projectId);
+    //   },
+    //   error: (error) => {
+    //     this.collaboratorAssignmentProcessing.set(false);
+    //     this.toast.error({
+    //       title: 'Assignment failed',
+    //       description:
+    //         'Unable to create the assignment right now. Please try again.',
+    //     });
+    //     console.error('[Resource] collaborator assignment failed', {
+    //       projectId: project.projectId,
+    //       empId: profile.employeeId,
+    //       error,
+    //     });
+    //   },
+    // });
   }
 
   toggleContentfulPanel() {
@@ -817,62 +811,62 @@ export class ProjectFormComponent implements OnInit {
   }
 
   loadContentfulBrief() {
-    if (this.contentfulForm.invalid) {
-      this.contentfulForm.markAllAsTouched();
-      this.toast.error({
-        title: 'Missing identifier',
-        description: 'Provide an entry ID or content type to fetch from Contentful.',
-      });
-      return;
-    }
-    const value = this.contentfulForm.getRawValue();
-    if (
-      (!value.entryId || !value.entryId.trim().length) &&
-      (!value.contentType || !value.contentType.trim().length)
-    ) {
-      this.toast.error({
-        title: 'Identifier required',
-        description: 'Provide an entry ID or content type before fetching.',
-      });
-      return;
-    }
-    this.contentfulLoading.set(true);
-    this.masterService
-      .fetchContentfulBrief({
-        entryId: value.entryId?.trim() || undefined,
-        contentType: value.contentType?.trim() || undefined,
-        slug: value.slug?.trim() || undefined,
-        preview: value.preview ?? false,
-      })
-      .subscribe({
-        next: (brief) => {
-          this.contentfulLoading.set(false);
-          this.contentfulBrief.set(brief);
-          this.contentfulError.set(null);
-          this.contentfulPanelOpen.set(true);
-          console.log('[Contentful] brief fetched', {
-            entryId: brief.entryId,
-            title: brief.title,
-          });
-          this.toast.success({
-            title: 'Brief loaded',
-            description: 'Review the Contentful entry below.',
-          });
-        },
-        error: (error) => {
-          this.contentfulLoading.set(false);
-          const message =
-            error?.error?.message ??
-            error?.message ??
-            'Unable to fetch Contentful entry.';
-          this.contentfulError.set(message);
-          this.toast.error({
-            title: 'Contentful error',
-            description: message,
-          });
-          console.error('[Contentful] fetch failed', error);
-        },
-      });
+    // if (this.contentfulForm.invalid) {
+    //   this.contentfulForm.markAllAsTouched();
+    //   this.toast.error({
+    //     title: 'Missing identifier',
+    //     description: 'Provide an entry ID or content type to fetch from Contentful.',
+    //   });
+    //   return;
+    // }
+    // const value = this.contentfulForm.getRawValue();
+    // if (
+    //   (!value.entryId || !value.entryId.trim().length) &&
+    //   (!value.contentType || !value.contentType.trim().length)
+    // ) {
+    //   this.toast.error({
+    //     title: 'Identifier required',
+    //     description: 'Provide an entry ID or content type before fetching.',
+    //   });
+    //   return;
+    // }
+    // this.contentfulLoading.set(true);
+    // this.masterService
+    //   .fetchContentfulBrief({
+    //     entryId: value.entryId?.trim() || undefined,
+    //     contentType: value.contentType?.trim() || undefined,
+    //     slug: value.slug?.trim() || undefined,
+    //     preview: value.preview ?? false,
+    //   })
+    //   .subscribe({
+    //     next: (brief) => {
+    //       this.contentfulLoading.set(false);
+    //       this.contentfulBrief.set(brief);
+    //       this.contentfulError.set(null);
+    //       this.contentfulPanelOpen.set(true);
+    //       console.log('[Contentful] brief fetched', {
+    //         entryId: brief.entryId,
+    //         title: brief.title,
+    //       });
+    //       this.toast.success({
+    //         title: 'Brief loaded',
+    //         description: 'Review the Contentful entry below.',
+    //       });
+    //     },
+    //     error: (error) => {
+    //       this.contentfulLoading.set(false);
+    //       const message =
+    //         error?.error?.message ??
+    //         error?.message ??
+    //         'Unable to fetch Contentful entry.';
+    //       this.contentfulError.set(message);
+    //       this.toast.error({
+    //         title: 'Contentful error',
+    //         description: message,
+    //       });
+    //       console.error('[Contentful] fetch failed', error);
+    //     },
+    //   });
   }
 
   applyContentfulOverview(brief: IContentfulBrief | null | undefined) {
@@ -891,16 +885,16 @@ export class ProjectFormComponent implements OnInit {
         successCriteria: this.joinMultiline(overview.successCriteria),
         stakeholderNotes: overview.stakeholderNotes ?? '',
       },
-      { emitEvent: false }
+      { emitEvent: false },
     );
     this.overviewDetailsForm.markAsPristine();
-    this.overviewMetadataSignal.set({
-      aiDraftSource: overview.aiDraftSource ?? 'contentful',
-      aiDraftGeneratedAt:
-        overview.aiDraftGeneratedAt ?? new Date().toISOString(),
-      cmsEntryId: overview.cmsEntryId ?? brief.entryId ?? undefined,
-      cmsEntryTitle: overview.cmsEntryTitle ?? brief.title ?? undefined,
-    });
+    // this.overviewMetadataSignal.set({
+    //   aiDraftSource: overview.aiDraftSource ?? 'contentful',
+    //   aiDraftGeneratedAt:
+    //     overview.aiDraftGeneratedAt ?? new Date().toISOString(),
+    //   cmsEntryId: overview.cmsEntryId ?? brief.entryId ?? undefined,
+    //   cmsEntryTitle: overview.cmsEntryTitle ?? brief.title ?? undefined,
+    // });
     this.upsertContentfulReference(brief);
     this.toast.success({
       title: 'Overview updated',
@@ -950,7 +944,7 @@ export class ProjectFormComponent implements OnInit {
       metadata: Object.keys(metadata).length ? metadata : undefined,
     };
     const existingIndex = current.findIndex(
-      (ref) => ref.provider === 'contentful' && ref.referenceId === entryId
+      (ref) => ref.provider === 'contentful' && ref.referenceId === entryId,
     );
     if (existingIndex >= 0) {
       const updated = current.map((ref, index) => {
@@ -974,36 +968,36 @@ export class ProjectFormComponent implements OnInit {
   }
 
   generateOverviewDraft() {
-    const request = this.buildOverviewGenerationPayload();
-    this.aiProcessing.set(true);
-    this.aiError.set(null);
-    this.masterService.generateOverviewDraft(request).subscribe({
-      next: (draft) => {
-        this.aiProcessing.set(false);
-        this.aiDraft.set(draft);
-        this.aiPanelOpen.set(true);
-        console.log('[AI] overview draft generated', {
-          source: draft.source,
-        });
-        this.toast.success({
-          title: 'AI draft ready',
-          description: `Overview generated with ${draft.source.toUpperCase()}.`,
-        });
-      },
-      error: (error) => {
-        this.aiProcessing.set(false);
-        const message =
-          error?.error?.message ??
-          error?.message ??
-          'Unable to generate overview draft.';
-        this.aiError.set(message);
-        this.toast.error({
-          title: 'Generation failed',
-          description: message,
-        });
-        console.error('[AI] overview generation failed', error);
-      },
-    });
+    // const request = this.buildOverviewGenerationPayload();
+    // this.aiProcessing.set(true);
+    // this.aiError.set(null);
+    // this.masterService.generateOverviewDraft(request).subscribe({
+    //   next: (draft) => {
+    //     this.aiProcessing.set(false);
+    //     this.aiDraft.set(draft);
+    //     this.aiPanelOpen.set(true);
+    //     console.log('[AI] overview draft generated', {
+    //       source: draft.source,
+    //     });
+    //     this.toast.success({
+    //       title: 'AI draft ready',
+    //       description: `Overview generated with ${draft.source.toUpperCase()}.`,
+    //     });
+    //   },
+    //   error: (error) => {
+    //     this.aiProcessing.set(false);
+    //     const message =
+    //       error?.error?.message ??
+    //       error?.message ??
+    //       'Unable to generate overview draft.';
+    //     this.aiError.set(message);
+    //     this.toast.error({
+    //       title: 'Generation failed',
+    //       description: message,
+    //     });
+    //     console.error('[AI] overview generation failed', error);
+    //   },
+    // });
   }
 
   applyAiDraft(draft: IAiOverviewDraft | null | undefined) {
@@ -1022,20 +1016,20 @@ export class ProjectFormComponent implements OnInit {
         successCriteria: this.joinMultiline(overview.successCriteria),
         stakeholderNotes: overview.stakeholderNotes ?? '',
       },
-      { emitEvent: false }
+      { emitEvent: false },
     );
     this.overviewDetailsForm.markAsPristine();
-    this.overviewMetadataSignal.set({
-      aiDraftSource: draft.source,
-      aiDraftGeneratedAt: new Date().toISOString(),
-    });
-    this.toast.success({
-      title: 'Overview updated',
-      description: `AI draft from ${draft.source.toUpperCase()} applied.`,
-    });
+    // this.overviewMetadataSignal.set({
+    //   aiDraftSource: draft.source,
+    //   aiDraftGeneratedAt: new Date().toISOString(),
+    // });
+    // this.toast.success({
+    //   title: 'Overview updated',
+    //   description: `AI draft from ${draft.source.toUpperCase()} applied.`,
+    // });
   }
 
-  assignmentStatusLabel(assignment: IProjectResourceAssignment) {
+  assignmentStatusLabel(assignment: ITaskResourceAssignment) {
     return assignment.isActive ? 'Active' : 'Inactive';
   }
 
@@ -1052,7 +1046,7 @@ export class ProjectFormComponent implements OnInit {
 
   commentSeverityClass(severity?: string) {
     const entry = REVIEWER_SEVERITIES.find(
-      (item) => item.value === severity
+      (item) => item.value === severity,
     )?.value;
     switch (entry) {
       case 'critical':
@@ -1080,7 +1074,7 @@ export class ProjectFormComponent implements OnInit {
 
   actorDisplayName(
     actorId?: number | string | null,
-    actorName?: string | null
+    actorName?: string | null,
   ) {
     if (actorName && actorName.trim().length) {
       return actorName.trim();
@@ -1119,195 +1113,189 @@ export class ProjectFormComponent implements OnInit {
   }
 
   submitReviewerComment() {
-    if (this.reviewerCommentForm.invalid) {
-      this.reviewerCommentForm.markAllAsTouched();
-      this.toast.error({
-        title: 'Missing details',
-        description: 'Please provide a comment before submitting.',
-      });
-      return;
-    }
-
-    const project = this.currentProjectSignal();
-    if (!project?.projectId) {
-      return;
-    }
-
-    const payload = this.reviewerCommentForm.getRawValue();
-    this.reviewerCommentProcessing.set(true);
-    this.masterService
-      .addReviewerComment(project.projectId, payload)
-      .subscribe({
-        next: (updatedProject) => {
-          this.reviewerCommentProcessing.set(false);
-          console.log('[Approval] reviewer comment added', {
-            projectId: updatedProject.projectId,
-            commentCount: updatedProject.reviewerComments?.length ?? 0,
-          });
-          this.hydrateProject(updatedProject);
-          this.reviewerCommentForm.reset(
-            {
-              section: payload.section ?? 'overview',
-              reviewerId: null,
-              reviewerName: '',
-              comment: '',
-              severity: payload.severity ?? 'info',
-            },
-            { emitEvent: false }
-          );
-          Object.values(this.reviewerCommentForm.controls).forEach((control) =>
-            control.markAsUntouched()
-          );
-          this.reviewerCommentForm.markAsPristine();
-          this.toast.success({
-            title: 'Comment added',
-            description: 'Reviewer feedback has been logged.',
-          });
-          this.refreshProjectSnapshot(updatedProject.projectId);
-        },
-        error: () => {
-          this.reviewerCommentProcessing.set(false);
-          this.toast.error({
-            title: 'Action failed',
-            description: 'Unable to add reviewer comment right now.',
-          });
-          console.error('[Approval] add reviewer comment failed', {
-            projectId: project.projectId,
-            payload,
-          });
-        },
-      });
+    // if (this.reviewerCommentForm.invalid) {
+    //   this.reviewerCommentForm.markAllAsTouched();
+    //   this.toast.error({
+    //     title: 'Missing details',
+    //     description: 'Please provide a comment before submitting.',
+    //   });
+    //   return;
+    // }
+    // const project = this.currentProjectSignal();
+    // if (!project?.projectId) {
+    //   return;
+    // }
+    // const payload = this.reviewerCommentForm.getRawValue();
+    // this.reviewerCommentProcessing.set(true);
+    // this.masterService
+    //   .addReviewerComment(project.projectId, payload)
+    //   .subscribe({
+    //     next: (updatedProject) => {
+    //       this.reviewerCommentProcessing.set(false);
+    //       console.log('[Approval] reviewer comment added', {
+    //         projectId: updatedProject.projectId,
+    //         commentCount: updatedProject.reviewerComments?.length ?? 0,
+    //       });
+    //       this.hydrateProject(updatedProject);
+    //       this.reviewerCommentForm.reset(
+    //         {
+    //           section: payload.section ?? 'overview',
+    //           reviewerId: null,
+    //           reviewerName: '',
+    //           comment: '',
+    //           severity: payload.severity ?? 'info',
+    //         },
+    //         { emitEvent: false }
+    //       );
+    //       Object.values(this.reviewerCommentForm.controls).forEach((control) =>
+    //         control.markAsUntouched()
+    //       );
+    //       this.reviewerCommentForm.markAsPristine();
+    //       this.toast.success({
+    //         title: 'Comment added',
+    //         description: 'Reviewer feedback has been logged.',
+    //       });
+    //       this.refreshProjectSnapshot(updatedProject.projectId);
+    //     },
+    //     error: () => {
+    //       this.reviewerCommentProcessing.set(false);
+    //       this.toast.error({
+    //         title: 'Action failed',
+    //         description: 'Unable to add reviewer comment right now.',
+    //       });
+    //       console.error('[Approval] add reviewer comment failed', {
+    //         projectId: project.projectId,
+    //         payload,
+    //       });
+    //     },
+    //   });
   }
 
   toggleReviewerCommentResolved(comment: IReviewerCommentEntry) {
-    const project = this.currentProjectSignal();
-    if (!project?.projectId) {
-      return;
-    }
-
-    this.reviewerCommentProcessing.set(true);
-    const payload = {
-      resolved: !comment.resolved,
-      ...this.buildApprovalPayload(),
-    };
-    this.masterService
-      .resolveReviewerComment(project.projectId, comment.id, payload)
-      .subscribe({
-        next: (updatedProject) => {
-          this.reviewerCommentProcessing.set(false);
-          this.hydrateProject(updatedProject);
-          const message = comment.resolved
-            ? 'Comment reopened'
-            : 'Comment resolved';
-          this.toast.success({
-            title: message,
-            description: 'Reviewer comment state has been updated.',
-          });
-          this.refreshProjectSnapshot(updatedProject.projectId);
-        },
-        error: () => {
-          this.reviewerCommentProcessing.set(false);
-          this.toast.error({
-            title: 'Action failed',
-            description: 'Unable to update reviewer comment right now.',
-          });
-        },
-      });
+    // const project = this.currentProjectSignal();
+    // if (!project?.projectId) {
+    //   return;
+    // }
+    // this.reviewerCommentProcessing.set(true);
+    // const payload = {
+    //   resolved: !comment.resolved,
+    //   ...this.buildApprovalPayload(),
+    // };
+    // this.masterService
+    //   .resolveReviewerComment(project.projectId, comment.id, payload)
+    //   .subscribe({
+    //     next: (updatedProject) => {
+    //       this.reviewerCommentProcessing.set(false);
+    //       this.hydrateProject(updatedProject);
+    //       const message = comment.resolved
+    //         ? 'Comment reopened'
+    //         : 'Comment resolved';
+    //       this.toast.success({
+    //         title: message,
+    //         description: 'Reviewer comment state has been updated.',
+    //       });
+    //       this.refreshProjectSnapshot(updatedProject.projectId);
+    //     },
+    //     error: () => {
+    //       this.reviewerCommentProcessing.set(false);
+    //       this.toast.error({
+    //         title: 'Action failed',
+    //         description: 'Unable to update reviewer comment right now.',
+    //       });
+    //     },
+    //   });
   }
 
   private performApprovalAction(
-    action: 'request' | 'approve' | 'reject' | 'reset'
+    action: 'request' | 'approve' | 'reject' | 'reset',
   ) {
-    const project = this.currentProjectSignal();
-    if (!project?.projectId) {
-      this.toast.error({
-        title: 'Project not saved',
-        description: 'Save the project before managing approvals.',
-      });
-      return;
-    }
-
-    const payload = this.buildApprovalPayload();
-    if (action === 'reject' && !payload.comment) {
-      this.toast.error({
-        title: 'Provide a reason',
-        description: 'Please include a short note explaining the rejection.',
-      });
-      return;
-    }
-
-    this.approvalProcessing.set(true);
-    let request$: Observable<IProject>;
-    let successTitle = '';
-    switch (action) {
-      case 'request':
-        request$ = this.masterService.requestProjectApproval(
-          project.projectId,
-          payload
-        );
-        successTitle = 'Approval requested';
-        break;
-      case 'approve':
-        request$ = this.masterService.approveProject(
-          project.projectId,
-          payload
-        );
-        successTitle = 'Project approved';
-        break;
-      case 'reject':
-        request$ = this.masterService.rejectProject(project.projectId, payload);
-        successTitle = 'Project rejected';
-        break;
-      case 'reset':
-        request$ = this.masterService.resetProjectApproval(
-          project.projectId,
-          payload
-        );
-        successTitle = 'Approval reset';
-        break;
-      default:
-        this.approvalProcessing.set(false);
-        return;
-    }
-
-    request$.subscribe({
-      next: (updatedProject) => {
-        this.approvalProcessing.set(false);
-        console.log('[Approval] approval action complete', {
-          action,
-          projectId: updatedProject.projectId,
-          status: updatedProject.status,
-          approvalStatus: updatedProject.approvalStatus,
-          historyCount: updatedProject.statusHistory?.length ?? 0,
-          timelineCount: updatedProject.timeline?.length ?? 0,
-        });
-        const snapshot = this.cloneProject(updatedProject);
-        this.hydrateProject(snapshot);
-        this.approvalForm.patchValue({ comment: '' }, { emitEvent: false });
-        if (action === 'reset') {
-          this.approvalForm.patchValue({ actorName: '' }, { emitEvent: false });
-        }
-        this.toast.success({
-          title: successTitle,
-          description: `Status is now ${this.approvalStatusLabel(
-            snapshot.approvalStatus
-          )}.`,
-        });
-        this.refreshProjectSnapshot(snapshot.projectId);
-      },
-      error: () => {
-        this.approvalProcessing.set(false);
-        this.toast.error({
-          title: 'Approval update failed',
-          description: 'Unable to update approval status right now.',
-        });
-        console.error('[Approval] approval action failed', {
-          action,
-          projectId: project.projectId,
-          payload,
-        });
-      },
-    });
+    // const project = this.currentProjectSignal();
+    // if (!project?.projectId) {
+    //   this.toast.error({
+    //     title: 'Project not saved',
+    //     description: 'Save the project before managing approvals.',
+    //   });
+    //   return;
+    // }
+    // const payload = this.buildApprovalPayload();
+    // if (action === 'reject' && !payload.comment) {
+    //   this.toast.error({
+    //     title: 'Provide a reason',
+    //     description: 'Please include a short note explaining the rejection.',
+    //   });
+    //   return;
+    // }
+    // this.approvalProcessing.set(true);
+    // let request$: Observable<ITask>;
+    // let successTitle = '';
+    // switch (action) {
+    //   case 'request':
+    //     request$ = this.masterService.requestProjectApproval(
+    //       project.projectId,
+    //       payload
+    //     );
+    //     successTitle = 'Approval requested';
+    //     break;
+    //   case 'approve':
+    //     request$ = this.masterService.approveProject(
+    //       project.projectId,
+    //       payload
+    //     );
+    //     successTitle = 'Project approved';
+    //     break;
+    //   case 'reject':
+    //     request$ = this.masterService.rejectProject(project.projectId, payload);
+    //     successTitle = 'Project rejected';
+    //     break;
+    //   case 'reset':
+    //     request$ = this.masterService.resetProjectApproval(
+    //       project.projectId,
+    //       payload
+    //     );
+    //     successTitle = 'Approval reset';
+    //     break;
+    //   default:
+    //     this.approvalProcessing.set(false);
+    //     return;
+    // }
+    // request$.subscribe({
+    //   next: (updatedProject) => {
+    //     this.approvalProcessing.set(false);
+    //     console.log('[Approval] approval action complete', {
+    //       action,
+    //       projectId: updatedProject.projectId,
+    //       status: updatedProject.status,
+    //       approvalStatus: updatedProject.approvalStatus,
+    //       historyCount: updatedProject.statusHistory?.length ?? 0,
+    //       timelineCount: updatedProject.timeline?.length ?? 0,
+    //     });
+    //     const snapshot = this.cloneProject(updatedProject);
+    //     this.hydrateProject(snapshot);
+    //     this.approvalForm.patchValue({ comment: '' }, { emitEvent: false });
+    //     if (action === 'reset') {
+    //       this.approvalForm.patchValue({ actorName: '' }, { emitEvent: false });
+    //     }
+    //     this.toast.success({
+    //       title: successTitle,
+    //       description: `Status is now ${this.approvalStatusLabel(
+    //         snapshot.approvalStatus
+    //       )}.`,
+    //     });
+    //     this.refreshProjectSnapshot(snapshot.projectId);
+    //   },
+    //   error: () => {
+    //     this.approvalProcessing.set(false);
+    //     this.toast.error({
+    //       title: 'Approval update failed',
+    //       description: 'Unable to update approval status right now.',
+    //     });
+    //     console.error('[Approval] approval action failed', {
+    //       action,
+    //       projectId: project.projectId,
+    //       payload,
+    //     });
+    //   },
+    // });
   }
 
   private buildApprovalPayload() {
@@ -1347,16 +1335,16 @@ export class ProjectFormComponent implements OnInit {
   }
 
   private fetchProject(id: number) {
-    this.masterService.getProjectById(id).subscribe({
-      next: (project) => this.hydrateProject(project),
-      error: () => {
-        this.toast.error({
-          title: 'Load failed',
-          description: 'Unable to load project details. Please retry.',
-        });
-        this.router.navigate(['/projects']);
-      },
-    });
+    // this.masterService.getProjectById(id).subscribe({
+    //   next: (project) => this.hydrateProject(project),
+    //   error: () => {
+    //     this.toast.error({
+    //       title: 'Load failed',
+    //       description: 'Unable to load project details. Please retry.',
+    //     });
+    //     this.router.navigate(['/projects']);
+    //   },
+    // });
   }
 
   private loadEmployees() {
@@ -1369,30 +1357,30 @@ export class ProjectFormComponent implements OnInit {
   }
 
   private loadResourceInsights(projectId: number) {
-    if (!projectId || projectId <= 0) {
-      this.resourceInsightsSignal.set(null);
-      return;
-    }
-    const requestToken = ++this.resourceInsightsRequestToken;
-    this.masterService
-      .getProjectResourceInsights(projectId)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (insights) => {
-          if (requestToken === this.resourceInsightsRequestToken) {
-            this.resourceInsightsSignal.set(insights);
-          }
-        },
-        error: (error) => {
-          if (requestToken === this.resourceInsightsRequestToken) {
-            console.error('[Resource] failed to load insights', {
-              projectId,
-              error,
-            });
-            this.resourceInsightsSignal.set(null);
-          }
-        },
-      });
+    // if (!projectId || projectId <= 0) {
+    //   this.resourceInsightsSignal.set(null);
+    //   return;
+    // }
+    // const requestToken = ++this.resourceInsightsRequestToken;
+    // this.masterService
+    //   .getProjectResourceInsights(projectId)
+    //   .pipe(takeUntilDestroyed(this.destroyRef))
+    //   .subscribe({
+    //     next: (insights) => {
+    //       if (requestToken === this.resourceInsightsRequestToken) {
+    //         this.resourceInsightsSignal.set(insights);
+    //       }
+    //     },
+    //     error: (error) => {
+    //       if (requestToken === this.resourceInsightsRequestToken) {
+    //         console.error('[Resource] failed to load insights', {
+    //           projectId,
+    //           error,
+    //         });
+    //         this.resourceInsightsSignal.set(null);
+    //       }
+    //     },
+    //   });
   }
 
   private buildReadinessControls(): Record<
@@ -1408,19 +1396,19 @@ export class ProjectFormComponent implements OnInit {
           }),
           ownerId: this.fb.control<number | null>(null),
           dueDate: this.fb.control<string | null>(
-            this.defaultDueDate(task.defaultDueInDays)
+            this.defaultDueDate(task.defaultDueInDays),
           ),
           notes: this.fb.control<string>(''),
         }),
       }),
-      {} as Record<ReadinessTaskId, ReadinessTaskFormGroup>
+      {} as Record<ReadinessTaskId, ReadinessTaskFormGroup>,
     );
   }
 
   private buildReadinessView(formValue: ReadinessFormValue) {
     const totalWeight = this.readinessTasks.reduce(
       (sum, task) => sum + task.weight,
-      0
+      0,
     );
     let completedWeight = 0;
     let completedItems = 0;
@@ -1509,27 +1497,27 @@ export class ProjectFormComponent implements OnInit {
     this.readinessForm.markAsPristine();
     this.readinessForm.updateValueAndValidity({ emitEvent: true });
     this.readinessFormValue.set(
-      this.readinessForm.getRawValue() as ReadinessFormValue
+      this.readinessForm.getRawValue() as ReadinessFormValue,
     );
   }
 
   private buildReadinessPayload(
     formValueOverride?: ReadinessFormValue,
-    baselineOverride?: IReadinessChecklistState | null
+    baselineOverride?: IReadinessChecklistState | null,
   ): IReadinessChecklistState {
     const formValue =
       formValueOverride ??
       (this.readinessForm.getRawValue() as ReadinessFormValue);
     const baseline = baselineOverride ?? this.readinessBaseline();
     const baselineMap = new Map(
-      baseline?.items?.map((item) => [item.id, item]) ?? []
+      baseline?.items?.map((item) => [item.id, item]) ?? [],
     );
     const employeesById = new Map(
-      this.employees().map((emp) => [emp.employeeId, emp.employeeName])
+      this.employees().map((emp) => [emp.id, emp.fullName]),
     );
     const totalWeight = this.readinessTasks.reduce(
       (sum, task) => sum + task.weight,
-      0
+      0,
     );
     const nowIso = new Date().toISOString();
     let completedWeight = 0;
@@ -1546,10 +1534,10 @@ export class ProjectFormComponent implements OnInit {
       const previous = baselineMap.get(task.id);
       const statusUpdatedAt =
         previous && previous.status === status
-          ? previous.statusUpdatedAt ?? nowIso
+          ? (previous.statusUpdatedAt ?? nowIso)
           : nowIso;
       const ownerName = ownerId
-        ? employeesById.get(ownerId) ?? previous?.ownerName ?? null
+        ? (employeesById.get(ownerId) ?? previous?.ownerName ?? null)
         : null;
 
       completedWeight += task.weight * READINESS_STATUS_VALUES[status];
@@ -1586,7 +1574,7 @@ export class ProjectFormComponent implements OnInit {
   }
 
   private formValueFromChecklist(
-    checklist?: IReadinessChecklistState | null
+    checklist?: IReadinessChecklistState | null,
   ): ReadinessFormValue {
     const fallback = this.defaultReadinessValue();
     if (!checklist?.items?.length) {
@@ -1603,7 +1591,7 @@ export class ProjectFormComponent implements OnInit {
         ownerId:
           typeof item.ownerId === 'number'
             ? item.ownerId
-            : item.ownerId ?? null,
+            : (item.ownerId ?? null),
         dueDate: item.dueDate ?? fallback[id].dueDate ?? null,
         notes: item.notes ?? '',
       };
@@ -1615,7 +1603,7 @@ export class ProjectFormComponent implements OnInit {
   }
 
   private applyReadinessFromProject(
-    checklist?: IReadinessChecklistState | null
+    checklist?: IReadinessChecklistState | null,
   ) {
     const value = this.formValueFromChecklist(checklist);
     this.setReadinessFormValue(value);
@@ -1624,7 +1612,7 @@ export class ProjectFormComponent implements OnInit {
     this.readinessBaseline.set(JSON.parse(JSON.stringify(baseline)));
   }
 
-  private applyOverviewToForms(overview: IProjectOverview | null | undefined) {
+  private applyOverviewToForms(overview: ITaskOverview | null | undefined) {
     const summary = overview?.summary ?? '';
     const objectives = this.joinMultiline(overview?.objectives);
     const successCriteria = this.joinMultiline(overview?.successCriteria);
@@ -1637,16 +1625,16 @@ export class ProjectFormComponent implements OnInit {
         successCriteria,
         stakeholderNotes,
       },
-      { emitEvent: false }
+      { emitEvent: false },
     );
     this.overviewDetailsForm.markAsPristine();
     if (overview) {
-      this.overviewMetadataSignal.set({
-        aiDraftSource: overview.aiDraftSource,
-        aiDraftGeneratedAt: overview.aiDraftGeneratedAt,
-        cmsEntryId: overview.cmsEntryId,
-        cmsEntryTitle: overview.cmsEntryTitle,
-      });
+      // this.overviewMetadataSignal.set({
+      //   aiDraftSource: overview.aiDraftSource,
+      //   aiDraftGeneratedAt: overview.aiDraftGeneratedAt,
+      //   cmsEntryId: overview.cmsEntryId,
+      //   cmsEntryTitle: overview.cmsEntryTitle,
+      // });
     } else {
       this.overviewMetadataSignal.set(null);
     }
@@ -1669,14 +1657,14 @@ export class ProjectFormComponent implements OnInit {
       .filter((line) => line.length > 0);
   }
 
-  private buildOverviewPayload(): IProjectOverview | null {
+  private buildOverviewPayload(): ITaskOverview | null {
     const value = this.overviewDetailsForm.getRawValue();
     const summary = (value.summary ?? '').trim();
     const objectives = this.splitMultiline(value.objectives);
     const successCriteria = this.splitMultiline(value.successCriteria);
     const stakeholderNotes = (value.stakeholderNotes ?? '').trim();
 
-    const payload: IProjectOverview = {
+    const payload: ITaskOverview = {
       summary,
       objectives,
       successCriteria,
@@ -1687,17 +1675,20 @@ export class ProjectFormComponent implements OnInit {
     }
 
     const meta = this.overviewMetadataSignal();
-    if (meta) {
-      Object.assign(payload, meta);
-      if (!payload.aiDraftGeneratedAt && meta.aiDraftSource) {
-        payload.aiDraftGeneratedAt =
-          meta.aiDraftGeneratedAt ?? new Date().toISOString();
-      }
-      if (meta.cmsEntryId === undefined && payload.aiDraftSource !== 'contentful') {
-        delete payload.cmsEntryId;
-        delete payload.cmsEntryTitle;
-      }
-    }
+    // if (meta) {
+    //   Object.assign(payload, meta);
+    //   if (!payload.aiDraftGeneratedAt && meta.aiDraftSource) {
+    //     payload.aiDraftGeneratedAt =
+    //       meta.aiDraftGeneratedAt ?? new Date().toISOString();
+    //   }
+    //   if (
+    //     meta.cmsEntryId === undefined &&
+    //     payload.aiDraftSource !== 'contentful'
+    //   ) {
+    //     delete payload.cmsEntryId;
+    //     delete payload.cmsEntryTitle;
+    //   }
+    // }
 
     return payload;
   }
@@ -1711,23 +1702,24 @@ export class ProjectFormComponent implements OnInit {
 
     return {
       project: {
-        projectId: projectSnapshot?.projectId ?? undefined,
-        projectName:
-          (formValue.projectName ?? projectSnapshot?.projectName ?? '')
-            .toString()
-            .trim(),
-        clientName:
-          (formValue.clientName ?? projectSnapshot?.clientName ?? '')
-            .toString()
-            .trim(),
+        projectId: projectSnapshot?.taskId ?? undefined,
+        projectName: (formValue.projectName ?? projectSnapshot?.taskTitle ?? '')
+          .toString()
+          .trim(),
+        clientName: (formValue.clientName ?? projectSnapshot?.clientName ?? '')
+          .toString()
+          .trim(),
         startDate:
           formValue.startDate ??
           projectSnapshot?.startDate ??
           this.todayString(),
-        contactPerson:
-          (formValue.contactPerson ?? projectSnapshot?.contactPerson ?? '')
-            .toString()
-            .trim(),
+        contactPerson: (
+          formValue.contactPerson ??
+          projectSnapshot?.contactPerson ??
+          ''
+        )
+          .toString()
+          .trim(),
         overview: {
           summary: (overviewValue.summary ?? '').trim(),
           objectives: this.splitMultiline(overviewValue.objectives),
@@ -1745,18 +1737,18 @@ export class ProjectFormComponent implements OnInit {
     };
   }
 
-  private cloneProject(project: IProject): IProject {
-    return JSON.parse(JSON.stringify(project)) as IProject;
+  private cloneProject(project: ITask): ITask {
+    return JSON.parse(JSON.stringify(project)) as ITask;
   }
 
-  private hydrateProject(project: IProject | null) {
+  private hydrateProject(project: ITask | null) {
     if (!project) {
       console.warn('[Approval] hydrateProject called with null project');
       this.resourceInsightsSignal.set(null);
       return;
     }
     console.log('[Approval] hydrating project', {
-      projectId: project.projectId,
+      projectId: project.taskId,
       status: project.status,
       approvalStatus: project.approvalStatus,
       historyCount: project.statusHistory?.length ?? 0,
@@ -1770,12 +1762,12 @@ export class ProjectFormComponent implements OnInit {
     this.aiPanelOpen.set(false);
     this.aiDraft.set(null);
     this.aiError.set(null);
-    this.cmsReferencesSignal.set(snapshot.cmsContentRefs ?? []);
+    // this.cmsReferencesSignal.set(snapshot.cmsContentRefs ?? []);
     this.currentProjectSignal.set(snapshot);
     this.projectForm.patchValue(
       {
-        projectId: snapshot.projectId ?? 0,
-        projectName: snapshot.projectName ?? '',
+        projectId: snapshot.taskId ?? 0,
+        projectName: snapshot.taskTitle ?? '',
         clientName: snapshot.clientName ?? '',
         startDate: snapshot.startDate
           ? snapshot.startDate.substring(0, 10)
@@ -1785,39 +1777,39 @@ export class ProjectFormComponent implements OnInit {
         contactNo: snapshot.contactNo ?? '',
         emailId: snapshot.emailId ?? '',
       },
-      { emitEvent: false }
+      { emitEvent: false },
     );
     this.applyReadinessFromProject(snapshot.readinessChecklist);
     this.applyOverviewToForms(snapshot.overview ?? null);
     this.applyDefaultApprovalActor(snapshot);
     this.projectForm.markAsPristine();
-    if (snapshot.projectId && snapshot.projectId > 0) {
-      this.loadResourceInsights(snapshot.projectId);
+    if (snapshot.taskId && snapshot.taskId > 0) {
+      this.loadResourceInsights(snapshot.taskId);
     } else {
       this.resourceInsightsSignal.set(null);
     }
   }
 
   private refreshProjectSnapshot(projectId: number | null | undefined) {
-    if (!projectId) {
-      console.warn('[Approval] refreshProjectSnapshot skipped, missing id');
-      return;
-    }
-    console.log('[Approval] refreshing project snapshot', { projectId });
-    this.masterService.getProjectById(projectId).subscribe({
-      next: (project) => this.hydrateProject(project),
-      error: (error) => {
-        this.toast.error({
-          title: 'Refresh failed',
-          description:
-            'Unable to refresh the project data at the moment. Try again shortly.',
-        });
-        console.error('[Approval] refreshProjectSnapshot failed', {
-          projectId,
-          error,
-        });
-      },
-    });
+    // if (!projectId) {
+    //   console.warn('[Approval] refreshProjectSnapshot skipped, missing id');
+    //   return;
+    // }
+    // console.log('[Approval] refreshing project snapshot', { projectId });
+    // this.masterService.getProjectById(projectId).subscribe({
+    //   next: (project) => this.hydrateProject(project),
+    //   error: (error) => {
+    //     this.toast.error({
+    //       title: 'Refresh failed',
+    //       description:
+    //         'Unable to refresh the project data at the moment. Try again shortly.',
+    //     });
+    //     console.error('[Approval] refreshProjectSnapshot failed', {
+    //       projectId,
+    //       error,
+    //     });
+    //   },
+    // });
   }
 
   private resetReadinessForm() {
@@ -1843,7 +1835,7 @@ export class ProjectFormComponent implements OnInit {
     this.applyDefaultApprovalActor();
   }
 
-  private applyDefaultApprovalActor(project?: IProject | null) {
+  private applyDefaultApprovalActor(project?: ITask | null) {
     const actorControl = this.approvalForm.controls['actorId'];
     const hasSelection =
       actorControl.value !== null && actorControl.value !== undefined;

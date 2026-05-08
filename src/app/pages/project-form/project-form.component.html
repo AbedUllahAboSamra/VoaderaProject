@@ -10,7 +10,12 @@
           routerLink="/projects"
           class="inline-flex items-center gap-2 text-xs font-medium text-white/60 transition hover:text-white"
         >
-          ← Back to projects
+          ← Back to <ul class="list-unstyled">
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+          </ul>
+
         </a>
         <div class="flex items-center gap-3">
           <h1 class="text-2xl font-semibold text-white">
@@ -138,9 +143,9 @@
               <option [ngValue]="null">Unassigned</option>
               <option
                 *ngFor="let employee of employees()"
-                [ngValue]="employee.employeeId"
+                [ngValue]="employee.id"
               >
-                {{ employee.employeeName }}
+                {{ employee.fullName }}
               </option>
             </select>
           </div>
@@ -426,7 +431,7 @@
                 {{ overview.stakeholderNotes }}
               </p>
             </div>
-            <div
+            <!-- <div
               *ngIf="overview.aiDraftSource || overview.cmsEntryId"
               class="mt-4 flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.25em] text-white/45"
             >
@@ -436,13 +441,13 @@
               </span>
               <span *ngIf="overview.aiDraftGeneratedAt">
                 Updated
-                {{ overview.aiDraftGeneratedAt | date : "medium" }}
+                {{ overview.aiDraftGeneratedAt | date: "medium" }}
               </span>
               <span *ngIf="overview.cmsEntryTitle">
                 Contentful:
                 {{ overview.cmsEntryTitle }}
               </span>
-            </div>
+            </div> -->
           </ng-container>
           <div class="mt-6 flex justify-end">
             <button
@@ -818,9 +823,9 @@
                 <option value="">Unassigned</option>
                 <option
                   *ngFor="let employee of employees()"
-                  [ngValue]="employee.employeeId"
+                  [ngValue]="employee.id"
                 >
-                  {{ employee.employeeName }}
+                  {{ employee.fullName }}
                 </option>
               </select>
             </div>
@@ -1310,18 +1315,12 @@
                         class="rounded-xl border border-white/20 px-4 py-2 text-xs text-white/70 transition hover:border-white/40 hover:text-white"
                         (click)="startCollaboratorAssignment(collaborator)"
                       >
-                        {{
-                          collaboratorAssignmentProfile()?.employeeId ===
-                          collaborator.employeeId
-                            ? "Close panel"
-                            : "Add to team"
-                        }}
+                        {{ false ? "Close panel" : "Add to team" }}
                       </button>
                     </div>
                     <form
                       *ngIf="
-                        collaboratorAssignmentProfile()?.employeeId ===
-                        collaborator.employeeId
+                        false
                       "
                       [formGroup]="collaboratorAssignmentForm"
                       (ngSubmit)="submitCollaboratorAssignment()"
@@ -1618,7 +1617,7 @@
                 {{ approvalStatusLabel(approvalStatus()) }}
               </span>
             </div>
-            <div class="space-y-1 text-xs text-white/55">
+            <!-- <div class="space-y-1 text-xs text-white/55">
               <p *ngIf="currentProject()?.approvalRequestedAt">
                 Requested
                 {{ formatDateTime(currentProject()?.approvalRequestedAt) }}
@@ -1627,7 +1626,7 @@
                 Resolved
                 {{ formatDateTime(currentProject()?.approvalResolvedAt) }}
               </p>
-            </div>
+            </div> -->
             <div class="flex flex-wrap gap-2 pt-2">
               <button
                 *ngIf="canRequestApproval()"
@@ -1636,7 +1635,7 @@
                 size="sm"
                 class="bg-gradient-to-r from-sky-500 via-indigo-500 to-purple-500 text-white shadow-[0_20px_45px_rgba(14,116,244,0.35)]"
                 [disabled]="
-                  approvalProcessing() || !currentProject()?.projectId
+                  approvalProcessing() || !currentProject()?.taskId
                 "
                 (click)="requestApprovalAction()"
               >
@@ -1703,9 +1702,9 @@
                     <option value="">Unassigned</option>
                     <option
                       *ngFor="let employee of employees()"
-                      [ngValue]="employee.employeeId"
+                      [ngValue]="employee.id"
                     >
-                      {{ employee.employeeName }}
+                      {{ employee.fullName }}
                     </option>
                   </select>
                 </div>
@@ -1784,7 +1783,7 @@
             <h3 class="text-sm font-semibold text-white">Timeline</h3>
             <ng-container *ngIf="approvalTimeline().length; else noTimeline">
               <div
-                *ngFor="let entry of approvalTimeline() | slice : 0 : 6"
+                *ngFor="let entry of approvalTimeline() | slice: 0 : 6"
                 class="space-y-1 rounded-2xl border border-white/10 bg-white/5 px-4 py-3"
               >
                 <div class="flex items-center justify-between">
@@ -1871,9 +1870,9 @@
                 <option value="">External</option>
                 <option
                   *ngFor="let employee of employees()"
-                  [ngValue]="employee.employeeId"
+                  [ngValue]="employee.id"
                 >
-                  {{ employee.employeeName }}
+                  {{ employee.fullName }}
                 </option>
               </select>
             </div>
@@ -1917,7 +1916,7 @@
                 size="sm"
                 class="bg-gradient-to-r from-sky-500 via-indigo-500 to-purple-500 text-white shadow-[0_20px_45px_rgba(14,116,244,0.35)]"
                 [disabled]="
-                  reviewerCommentProcessing() || !currentProject()?.projectId
+                  reviewerCommentProcessing() || !currentProject()?.taskId
                 "
               >
                 Add comment
@@ -2029,7 +2028,17 @@
 <div
   *ngIf="pendingDelete()"
   class="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-950/70 px-4 py-4"
-  style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; overflow-y: auto; display: flex; align-items: center; justify-content: center;"
+  style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  "
 >
   <div
     class="w-full max-w-md rounded-3xl border border-white/15 bg-gradient-to-br from-slate-900/95 via-slate-900/85 to-slate-900/95 p-6 text-sm text-white shadow-[0_40px_120px_rgba(9,9,16,0.65)]"

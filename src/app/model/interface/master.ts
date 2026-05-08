@@ -382,6 +382,430 @@ export interface Employee {
   lastActiveAt?: string;
   audit?: IAuditMetadata;
 }
+ 
+
+export interface IApiResponse {
+  message: string;
+  result: boolean;
+  data: any;
+}
+
+export interface IAuditMetadata {
+  createdBy?: number | string;
+  createdAt?: string;
+  updatedBy?: number | string;
+  updatedAt?: string;
+  source?: 'ui' | 'api' | 'automation';
+  correlationId?: string;
+}
+
+export interface ITaskDocument {
+  id: string;
+  name: string;
+  url: string;
+  type?: string;
+  description?: string;
+  uploadedAt: string;
+  uploadedBy?: number | string;
+  tags?: string[];
+  folder?: string;
+  externalSystem?: string;
+}
+
+export interface ITaskStatusHistoryEntry {
+  status: string;
+  changedAt: string;
+  changedBy?: number | string;
+  changedByName?: string;
+  comment?: string;
+  attachments?: ITaskDocument[];
+  metadata?: Record<string, unknown>;
+  previousStatus?: string;
+  note?: string;
+}
+
+export interface ITaskTimelineEntry {
+  id: string;
+  label: string;
+  description?: string;
+  state: 'completed' | 'in-progress' | 'blocked' | 'upcoming';
+  occurredAt: string;
+  dueAt?: string;
+  assigneeIds?: number[];
+  supportingDocs?: ITaskDocument[];
+  status?: string;
+  actorId?: number | string;
+  actorName?: string;
+}
+
+export interface ITaskReviewerComment {
+  section: string;
+  comment: string;
+  reviewerId: number;
+  reviewerName?: string;
+  createdAt: string;
+  severity?: 'info' | 'warning' | 'critical';
+  suggestions?: string[];
+  resolved?: boolean;
+  resolvedAt?: string;
+  resolvedBy?: number | string;
+}
+
+
+
+export interface IReadinessChecklistItem {
+  id: string;
+  title: string;
+  description?: string;
+  category?: string;
+  weight: number;
+  status: ReadinessStatus;
+  ownerId?: number | null;
+  ownerName?: string | null;
+  dueDate?: string | null;
+  notes?: string | null;
+  statusUpdatedAt?: string;
+  lastUpdatedBy?: number | string;
+}
+
+export interface IReadinessChecklistState {
+  items: IReadinessChecklistItem[];
+  totalWeight: number;
+  completedWeight: number;
+  percent: number;
+  updatedAt: string;
+  updatedBy?: number | string;
+  summary?: string;
+}
+
+
+export interface IApprovalAction {
+  actorId?: number;
+  actorName?: string;
+  comment?: string;
+  nextStatus?: ApprovalStatus;
+}
+
+export interface ITaskReviewerCommentEntry extends ITaskReviewerComment {
+  id: string;
+}
+
+
+export interface IResourceAllocationSummary {
+  capacityPct: number;
+  allocatedPct: number;
+  availablePct: number;
+  status: ResourceLoadStatus;
+  activeAssignments: number;
+}
+
+export interface ITaskAssignmentDigest {
+  taskId: number;
+  taskTitle?: string;
+  role?: string;
+  allocationPct?: number | null;
+  isCurrentTask?: boolean;
+  isActive?: boolean;
+  assignedDate?: string;
+}
+
+
+export interface ITaskResourceAssignment {
+  empTaskId: number;
+  role?: string;
+  allocationPct?: number | null;
+  allocationStatus: ResourceLoadStatus;
+  isActive: boolean;
+  assignedDate?: string;
+  employee: IResourceProfile;
+}
+
+export interface ITaskResourceMetrics {
+  benchCount: number;
+  overbookedCount: number;
+  averageAllocation: number;
+  activeAssignmentCount: number;
+  teamSize: number;
+}
+
+export interface ITaskResourceInsights {
+  taskId: number;
+  taskTitle: string;
+  retrievedAt: string;
+  resourcesPlan?: Record<string, unknown> | null;
+  lead: IResourceProfile | null;
+  assignments: ITaskResourceAssignment[];
+  recommendedLeads: IResourceProfile[];
+  recommendedCollaborators: IResourceProfile[];
+  metrics: ITaskResourceMetrics;
+}
+
+export interface ITaskOverview {
+  summary: string;
+  objectives: string[];
+  successCriteria: string[];
+  stakeholderNotes?: string;
+  personas?: string[];
+}
+
+export interface ITaskEmployee {
+  empTaskId: number;
+  taskId: number;
+  empId: number;
+  assignedDate: string;
+  role: string;
+  isActive: string;
+  taskTitle: string;
+  employeeName: string;
+  allocationPct?: number;
+  notes?: string;
+  responsibilities?: string[];
+  skillsApplied?: string[];
+  toolsUsed?: string[];
+  schedule?: Record<string, unknown>;
+  contribution?: Record<string, unknown>;
+  unassignedAt?: string;
+}
+
+export interface ITask {
+  taskId: number;
+  taskTitle: string;
+  clientName: string;
+  startDate: string;
+  leadByEmpId: number;
+  contactPerson: string;
+  contactNo: string;
+  emailId: string;
+  employeeName: string;
+
+  clientIndustry?: string;
+  endDate?: string;
+
+  overview?: ITaskOverview;
+
+  status?: string;
+  statusReason?: string;
+
+  statusHistory?: ITaskStatusHistoryEntry[];
+
+  timeline?: ITaskTimelineEntry[];
+
+  categories?: string[];
+  tags?: string[];
+
+  blockers?: string[];
+
+  readinessChecklist?: IReadinessChecklistState;
+
+  readinessScore?: number;
+
+  approvalStatus?: ApprovalStatus;
+
+  reviewerComments?: ITaskReviewerCommentEntry[];
+
+  progress?: number;
+
+  health?: string;
+
+  documents?: ITaskDocument[];
+
+  createdAt?: string;
+
+  updatedAt?: string;
+
+  archivedAt?: string;
+
+  audit?: IAuditMetadata;
+}
+
+export interface Employee {
+  employeeId: number;
+  employeeName: string;
+  contactNo: string;
+  emailId: string;
+  deptId: number;
+  password: string;
+  gender: string;
+  role: string;
+  department: string;
+
+  title?: string;
+  avatarUrl?: string;
+  location?: string;
+  timezone?: string;
+  employmentType?: string;
+
+  managerId?: number;
+
+  hireDate?: string;
+
+  bio?: string;
+
+  about?: string;
+
+  notes?: string;
+
+  tags?: string[];
+
+  skills?: string[];
+
+  certifications?: string[];
+
+  interests?: string[];
+
+  languages?: string[];
+
+  socialLinks?: Record<string, string>;
+
+  workPreferences?: Record<string, unknown>;
+
+  availability?: Record<string, unknown>;
+
+  preferences?: Record<string, unknown>;
+
+  performanceSnapshot?: Record<string, unknown>;
+
+  documents?: Array<Record<string, unknown>>;
+
+  customFields?: Record<string, unknown>;
+
+  isActive?: boolean;
+
+  createdAt?: string;
+
+  updatedAt?: string;
+
+  lastActiveAt?: string;
+
+  audit?: IAuditMetadata;
+}
 
 export type SectionId = 'overview' | 'team' | 'contact' | 'approval';
 
+export const TASKS_DATA: ITask[] = [
+  {
+    taskId: 1,
+    taskTitle: 'Build POS Dashboard',
+    clientName: 'Internal',
+    startDate: '2026-05-01',
+    leadByEmpId: 1,
+    contactPerson: 'Ahmed Ali',
+    contactNo: '0599000001',
+    emailId: 'ahmed@test.com',
+    employeeName: 'Ahmed Ali',
+
+    status: 'in_progress',
+
+    progress: 65,
+
+    health: 'good',
+
+    categories: ['Frontend'],
+
+    tags: ['Angular', 'Dashboard'],
+
+    blockers: [],
+
+    overview: {
+      summary: 'Create dashboard for POS system',
+      objectives: ['Build charts', 'Connect API'],
+      successCriteria: ['Responsive UI', 'Fast loading'],
+    },
+
+    timeline: [
+      {
+        id: '1',
+        label: 'Task Started',
+        state: 'completed',
+        occurredAt: '2026-05-01',
+      },
+      {
+        id: '2',
+        label: 'UI Development',
+        state: 'in-progress',
+        occurredAt: '2026-05-03',
+      },
+    ],
+
+    documents: [
+      {
+        id: 'd1',
+        name: 'dashboard-design.png',
+        url: '/docs/dashboard-design.png',
+        uploadedAt: '2026-05-02',
+      },
+    ],
+
+    createdAt: '2026-05-01',
+  },
+
+  {
+    taskId: 2,
+    taskTitle: 'Create Authentication API',
+    clientName: 'Internal',
+    startDate: '2026-05-02',
+    leadByEmpId: 2,
+    contactPerson: 'Sara',
+    contactNo: '0599000002',
+    emailId: 'sara@test.com',
+    employeeName: 'Sara Mohammad',
+
+    status: 'review',
+
+    progress: 90,
+
+    health: 'excellent',
+
+    categories: ['Backend'],
+
+    tags: ['API', '.NET'],
+
+    blockers: ['Need final testing'],
+
+    overview: {
+      summary: 'JWT Authentication System',
+      objectives: ['Login API', 'Refresh Token'],
+      successCriteria: ['Secure auth', 'Fast response'],
+    },
+
+    createdAt: '2026-05-02',
+  },
+];
+
+export const EMPLOYEES_DATA: Employee[] = [
+  {
+    employeeId: 1,
+    employeeName: 'Ahmed Ali',
+    contactNo: '0599000001',
+    emailId: 'ahmed@test.com',
+    deptId: 1,
+    password: '123',
+    gender: 'male',
+    role: 'Frontend Developer',
+    department: 'Frontend',
+
+    skills: ['Angular', 'Tailwind'],
+
+    certifications: ['Angular Advanced'],
+
+    isActive: true,
+  },
+
+  {
+    employeeId: 2,
+    employeeName: 'Sara Mohammad',
+    contactNo: '0599000002',
+    emailId: 'sara@test.com',
+    deptId: 2,
+    password: '123',
+    gender: 'female',
+    role: 'Backend Developer',
+    department: 'Backend',
+
+    skills: ['ASP.NET', 'SQL'],
+
+    certifications: ['Microsoft .NET'],
+
+    isActive: true,
+  },
+];

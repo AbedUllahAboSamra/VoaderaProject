@@ -80,7 +80,7 @@
         <input
           id="project-name"
           type="text"
-          formControlName="projectName"
+          formControlName="taskTitle"
           class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
           placeholder="Next-gen platform"
         />
@@ -177,11 +177,11 @@
       <button
         type="button"
         class="flex w-full items-center justify-between gap-4 px-6 py-5 text-left text-sm text-white/80 transition hover:bg-white/5"
-        (click)="toggleExpand(project.projectId)"
+        (click)="toggleExpand(project.taskId)"
       >
         <div class="flex flex-1 flex-col gap-1 md:flex-row md:items-center">
           <span class="text-base font-semibold text-white">
-            {{ project.projectName }}
+            {{ project.taskTitle }}
           </span>
           <span
             class="mt-1 inline-flex rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs text-white/70 md:ml-4 md:mt-0"
@@ -195,19 +195,19 @@
           </span>
           <span
             class="text-xs uppercase tracking-[0.35em] text-white/40 transition"
-            [class.text-white]="expandedProjectId === project.projectId"
+            [class.text-white]="expandedProjectId === project.taskId"
           >
-            {{ expandedProjectId === project.projectId ? "Hide" : "Details" }}
+            {{ expandedProjectId === project.taskId ? "Hide" : "Details" }}
           </span>
         </div>
       </button>
 
       <div
-        *ngIf="expandedProjectId === project.projectId"
+        *ngIf="expandedProjectId === project.taskId"
         class="border-t border-white/10 px-6 py-6 text-sm text-white/75"
       >
         <ng-container
-          *ngIf="editingProjectId === project.projectId; else projectView"
+          *ngIf="expandedProjectId === project.taskId; else projectView"
         >
           <form
             [formGroup]="projectForm"
@@ -217,25 +217,25 @@
           >
             <div class="md:col-span-1">
               <label
-                for="edit-project-name-{{ project.projectId }}"
+                for="edit-project-name-{{ project.taskId }}"
                 class="mb-2 block text-xs uppercase tracking-[0.3em] text-white/50"
                 >Project name</label
               >
               <input
-                [id]="'edit-project-name-' + project.projectId"
+                [id]="'edit-project-name-' + project.taskId"
                 type="text"
-                formControlName="projectName"
+                formControlName="taskTitle"
                 class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/90 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
               />
             </div>
             <div class="md:col-span-1">
               <label
-                for="edit-client-{{ project.projectId }}"
+                for="edit-client-{{ project.taskId }}"
                 class="mb-2 block text-xs uppercase tracking-[0.3em] text-white/50"
                 >Client name</label
               >
               <input
-                [id]="'edit-client-' + project.projectId"
+                [id]="'edit-client-' + project.taskId"
                 type="text"
                 formControlName="clientName"
                 class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/90 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
@@ -243,12 +243,12 @@
             </div>
             <div class="md:col-span-1">
               <label
-                for="edit-start-{{ project.projectId }}"
+                for="edit-start-{{ project.taskId }}"
                 class="mb-2 block text-xs uppercase tracking-[0.3em] text-white/50"
                 >Start date</label
               >
               <input
-                [id]="'edit-start-' + project.projectId"
+                [id]="'edit-start-' + project.taskId"
                 type="date"
                 formControlName="startDate"
                 class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/90 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
@@ -256,12 +256,12 @@
             </div>
             <div class="md:col-span-1">
               <label
-                for="edit-contact-person-{{ project.projectId }}"
+                for="edit-contact-person-{{ project.taskId }}"
                 class="mb-2 block text-xs uppercase tracking-[0.3em] text-white/50"
                 >Contact person</label
               >
               <input
-                [id]="'edit-contact-person-' + project.projectId"
+                [id]="'edit-contact-person-' + project.taskId"
                 type="text"
                 formControlName="contactPerson"
                 class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/90 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
@@ -269,12 +269,12 @@
             </div>
             <div class="md:col-span-1">
               <label
-                for="edit-contact-no-{{ project.projectId }}"
+                for="edit-contact-no-{{ project.taskId }}"
                 class="mb-2 block text-xs uppercase tracking-[0.3em] text-white/50"
                 >Contact number</label
               >
               <input
-                [id]="'edit-contact-no-' + project.projectId"
+                [id]="'edit-contact-no-' + project.taskId"
                 type="tel"
                 formControlName="contactNo"
                 class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/90 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
@@ -282,12 +282,12 @@
             </div>
             <div class="md:col-span-1">
               <label
-                for="edit-email-{{ project.projectId }}"
+                for="edit-email-{{ project.taskId }}"
                 class="mb-2 block text-xs uppercase tracking-[0.3em] text-white/50"
                 >Contact email</label
               >
               <input
-                [id]="'edit-email-' + project.projectId"
+                [id]="'edit-email-' + project.taskId"
                 type="email"
                 formControlName="emailId"
                 class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/90 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
@@ -373,21 +373,21 @@
                 size="sm"
                 variant="outline"
                 class="border-white/20 bg-white/5 text-white/80 hover:border-white/40 hover:text-white"
-                [routerLink]="['/update-project', project.projectId || 0]"
+                [routerLink]="['/update-project', project.taskId || 0]"
               >
                 Full editor
               </a>
               <button
                 type="button"
                 class="rounded-xl border border-white/20 px-4 py-2 text-xs text-white/70 transition hover:border-white/40 hover:text-white"
-                (click)="onEdit(project.projectId)"
+                (click)="onEdit(project.taskId)"
               >
                 Edit
               </button>
               <button
                 type="button"
                 class="rounded-xl border border-rose-400/40 bg-rose-500/10 px-4 py-2 text-xs text-rose-200 transition hover:border-rose-300/60 hover:bg-rose-500/20 hover:text-rose-100"
-                (click)="onDelete(project.projectId)"
+                (click)="onDelete(project.taskId)"
               >
                 Delete
               </button>
@@ -425,7 +425,7 @@
     class="w-full max-w-md rounded-3xl border border-white/15 bg-gradient-to-br from-slate-900/95 via-slate-900/85 to-slate-900/95 p-6 text-sm text-white shadow-[0_40px_120px_rgba(9,9,16,0.65)]"
   >
     <h2 class="text-lg font-semibold text-white">
-      Delete {{ toDelete.projectName }}?
+      Delete {{ toDelete.taskTitle }}?
     </h2>
     <p class="mt-2 text-white/70">
       This action cannot be undone. The project and its history will be removed.

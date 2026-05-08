@@ -1,4 +1,4 @@
-<div class="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8">
+<div class="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4">
   <section
     class="rounded-[30px] border border-white/10 bg-white/5/75 px-6 py-5 shadow-[0_30px_80px_rgba(15,23,42,0.45)] backdrop-blur-xl"
   >
@@ -26,14 +26,42 @@
           routerLinkActive="is-active-tab"
           class="tab-pill"
         >
-          Projects
+          Tasks
+        </a>
+        <a
+          routerLink="/Signatures"
+          routerLinkActive="is-active-tab"
+          class="tab-pill"
+        >
+          Signatures
         </a>
         <a
           routerLink="/project-employee"
           routerLinkActive="is-active-tab"
           class="tab-pill"
         >
-          Project Team
+          Task Team
+        </a>
+        <a
+          routerLink="/project-employee"
+          routerLinkActive="is-active-tab"
+          class="tab-pill"
+        >
+          Hr
+        </a>
+        <a
+          routerLink="/project-employee"
+          routerLinkActive="is-active-tab"
+          class="tab-pill"
+        >
+          Work Log
+        </a>
+        <a
+          routerLink="/project-employee"
+          routerLinkActive="is-active-tab"
+          class="tab-pill"
+        >
+          Employee Salary
         </a>
       </nav>
       <button
@@ -49,6 +77,6 @@
   <section
     class="rounded-[30px] border border-white/10 bg-white/5/80 px-4 py-6 shadow-[0_45px_120px_rgba(8,12,32,0.55)] backdrop-blur-xl sm:px-6"
   >
-  <router-outlet></router-outlet>
+    <router-outlet></router-outlet>
   </section>
 </div>

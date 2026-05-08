@@ -29,9 +29,9 @@ export class EmployeeComponent implements OnInit {
     }
     return this.employees().filter(
       (employee) =>
-        employee.employeeName?.toLowerCase().includes(term) ||
-        employee.department?.toLowerCase().includes(term) ||
-        employee.employeeId?.toString().includes(term)
+        employee.fullName?.toLowerCase().includes(term) ||
+        employee.departmentId.toString()?.toLowerCase().includes(term) ||
+        employee.id?.toString().includes(term),
     );
   });
 
@@ -46,23 +46,27 @@ export class EmployeeComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private masterService: MasterService,
-    private toast: ToastService
+    private toast: ToastService,
   ) {
     this.employeeForm = this.fb.group({
-      employeeId: [null], // Add employeeId to the form
-      employeeName: ['', Validators.required],
-      department: ['', Validators.required],
-      deptId: [null],
-      role: [''],
-      title: [''],
-      employmentType: [''],
-      contactNo: [''],
-      emailId: ['', Validators.email],
-      location: [''],
-      timezone: [''],
+      id: [null],
+
+      fullName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      phone: [''],
+      avatarUrl: [''],
+
+      roleId: [null, Validators.required],
+      departmentId: [null, Validators.required],
+      managerId: [null],
+
+      groupIds: [[]],
+
       hireDate: [''],
-      skills: [''],
-      tags: [''],
+      contractType: ['FULL_TIME', Validators.required],
+
+      salary: [0],
+      isActive: [true],
     });
   }
 
@@ -74,7 +78,7 @@ export class EmployeeComponent implements OnInit {
     this.masterService.getAllEmp().subscribe((res: Employee[]) => {
       this.employeesSignal.set(res ?? []);
       if (!this.expandedEmployeeId && res?.length) {
-        this.expandedEmployeeId = res[0].employeeId ?? null;
+        this.expandedEmployeeId = res[0].id ?? null;
       }
     });
   }
@@ -95,7 +99,7 @@ export class EmployeeComponent implements OnInit {
     this.expandedEmployeeId = null;
     this.employeeForm.reset({
       employeeId: null,
-      employeeName: '',
+      fullName: '',
       department: '',
       deptId: null,
       role: '',
@@ -118,35 +122,29 @@ export class EmployeeComponent implements OnInit {
 
   onEdit(employee: Employee) {
     this.showCreatePanel = false;
-    this.editingEmployeeId = employee.employeeId ?? null;
-    this.expandedEmployeeId = employee.employeeId ?? null;
-    // Format hireDate for date input (YYYY-MM-DD)
-    const formatDateForInput = (dateStr: string | null | undefined): string => {
-      if (!dateStr) return '';
-      try {
-        const date = new Date(dateStr);
-        if (isNaN(date.getTime())) return '';
-        return date.toISOString().split('T')[0];
-      } catch {
-        return '';
-      }
-    };
+    this.editingEmployeeId = employee.id ?? null;
+    this.expandedEmployeeId = employee.id ?? null;
 
     this.employeeForm.patchValue({
-      employeeId: employee.employeeId ?? null,
-      employeeName: employee.employeeName ?? '',
-      department: employee.department ?? '',
-      deptId: employee.deptId ?? null,
-      role: employee.role ?? '',
-      title: employee.title ?? '',
-      employmentType: employee.employmentType ?? '',
-      contactNo: employee.contactNo ?? '',
-      emailId: employee.emailId ?? '',
-      location: employee.location ?? '',
-      timezone: employee.timezone ?? '',
-      hireDate: formatDateForInput(employee.hireDate),
-      skills: Array.isArray(employee.skills) ? employee.skills.join(', ') : '',
-      tags: Array.isArray(employee.tags) ? employee.tags.join(', ') : '',
+      id: employee.id,
+      fullName: employee.fullName,
+      email: employee.email,
+      phone: employee.phone,
+      avatarUrl: employee.avatarUrl,
+
+      roleId: employee.roleId,
+      departmentId: employee.departmentId,
+
+      groupIds: employee.groupIds,
+
+      hireDate: employee.hireDate
+        ? new Date(employee.hireDate).toISOString().split('T')[0]
+        : '',
+
+      contractType: employee.contractType,
+
+      salary: employee.salary,
+      isActive: employee.isActive,
     });
   }
 
@@ -155,7 +153,7 @@ export class EmployeeComponent implements OnInit {
     this.editingEmployeeId = null;
     this.employeeForm.reset({
       employeeId: null,
-      employeeName: '',
+      fullName: '',
       department: '',
       deptId: null,
       role: '',
@@ -176,24 +174,24 @@ export class EmployeeComponent implements OnInit {
   }
 
   confirmDelete(confirmed: boolean) {
-    if (!confirmed || !this.pendingDelete?.employeeId) {
+    if (!confirmed || !this.pendingDelete?.id) {
       this.pendingDelete = null;
       return;
     }
-    const { employeeId, employeeName } = this.pendingDelete;
+    const { id, fullName } = this.pendingDelete;
     this.isDeleting = true;
-    this.masterService.deleteEmpById(employeeId).subscribe(
+    this.masterService.deleteEmpById(id).subscribe(
       () => {
         this.isDeleting = false;
         this.pendingDelete = null;
         this.employeesSignal.update((list) =>
-          list.filter((emp) => emp.employeeId !== employeeId)
+          list.filter((emp) => emp.id !== id),
         );
         this.toast.success({
           title: 'Employee removed',
-          description: `${employeeName} has been deleted.`,
+          description: `${fullName} has been deleted.`,
         });
-        if (this.expandedEmployeeId === employeeId) {
+        if (this.expandedEmployeeId === id) {
           this.expandedEmployeeId = null;
         }
       },
@@ -203,7 +201,7 @@ export class EmployeeComponent implements OnInit {
           title: 'Deletion failed',
           description: 'Unable to delete the employee right now.',
         });
-      }
+      },
     );
   }
 
@@ -211,7 +209,7 @@ export class EmployeeComponent implements OnInit {
     if (this.employeeForm.valid && !this.isSaving) {
       const employee = this.normalizePayload(this.employeeForm.value);
       this.isSaving = true;
-      if (employee.employeeId) {
+      if (employee.id) {
         // Update existing employee
         this.masterService.updateEmp(employee).subscribe(
           () => {
@@ -230,7 +228,7 @@ export class EmployeeComponent implements OnInit {
               title: 'Update failed',
               description: 'Something went wrong while saving changes.',
             });
-          }
+          },
         );
       } else {
         // Create new employee
@@ -251,7 +249,7 @@ export class EmployeeComponent implements OnInit {
               title: 'Creation failed',
               description: 'Unable to save the new employee.',
             });
-          }
+          },
         );
       }
     }
@@ -262,48 +260,30 @@ export class EmployeeComponent implements OnInit {
   }
 
   private normalizePayload(raw: any): Employee {
-    const parseCsv = (value: unknown) => {
-      if (typeof value !== 'string') {
-        return [];
-      }
-      return value
-        .split(',')
-        .map((item) => item.trim())
-        .filter((item) => item.length > 0);
-    };
-
-    // Convert date input (YYYY-MM-DD) to ISO string or keep as is
-    const normalizeDate = (
-      dateValue: string | null | undefined
-    ): string | null => {
-      if (!dateValue || typeof dateValue !== 'string') return null;
-      try {
-        const date = new Date(dateValue);
-        if (isNaN(date.getTime())) return null;
-        return date.toISOString();
-      } catch {
-        return null;
-      }
-    };
-
     return {
-      employeeId: raw.employeeId ?? null,
-      employeeName: raw.employeeName ?? '',
-      department: raw.department ?? '',
-      deptId:
-        raw.deptId !== null && raw.deptId !== undefined && raw.deptId !== ''
-          ? Number(raw.deptId)
-          : null,
-      role: raw.role ?? '',
-      title: raw.title ?? '',
-      employmentType: raw.employmentType ?? '',
-      contactNo: raw.contactNo ?? '',
-      emailId: raw.emailId ?? '',
-      location: raw.location ?? '',
-      timezone: raw.timezone ?? '',
-      hireDate: normalizeDate(raw.hireDate),
-      skills: parseCsv(raw.skills),
-      tags: parseCsv(raw.tags),
-    } as Employee;
+      id: raw.id ?? null,
+
+      fullName: raw.fullName,
+      email: raw.email,
+      phone: raw.phone,
+      avatarUrl: raw.avatarUrl,
+
+      roleId: Number(raw.roleId),
+      departmentId: Number(raw.departmentId),
+
+      groupIds: Array.isArray(raw.groupIds) ? raw.groupIds : [],
+
+      hireDate: raw.hireDate ? new Date(raw.hireDate) : new Date(),
+
+      contractType: raw.contractType ?? 'FULL_TIME',
+
+      salary: raw.salary ? Number(raw.salary) : 0,
+
+      isActive: raw.isActive ?? true,
+
+      totalTasksCompleted: 0,
+      totalHoursWorked: 0,
+      performanceScore: 0,
+    };
   }
 }

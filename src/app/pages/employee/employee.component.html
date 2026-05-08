@@ -215,7 +215,7 @@
           class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
         />
       </div>
-      <div class="sm:col-span-1">
+      <!-- <div class="sm:col-span-1">
         <label
           for="create-skills"
           class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/60"
@@ -228,8 +228,8 @@
           class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
           placeholder="Angular, TypeScript"
         />
-      </div>
-      <div class="sm:col-span-1">
+      </div> -->
+      <!-- <div class="sm:col-span-1">
         <label
           for="create-tags"
           class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/60"
@@ -242,7 +242,7 @@
           class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
           placeholder="mentor, remote"
         />
-      </div>
+      </div> -->
       <div class="sm:col-span-2 flex justify-end gap-3 pt-2">
         <button
           type="submit"
@@ -266,18 +266,18 @@
       <button
         type="button"
         class="flex w-full items-center justify-between gap-4 px-6 py-5 text-left text-sm text-white/80 transition hover:bg-white/5"
-        (click)="toggleExpand(employee.employeeId)"
+        (click)="toggleExpand(employee.id)"
       >
         <div class="flex flex-1 flex-col gap-1 md:flex-row md:items-center">
           <span
             class="inline-flex h-8 w-8 items-center justify-center rounded-2xl border border-white/15 bg-white/10 text-xs font-semibold text-white/80 shadow-inner shadow-slate-950/25"
           >
-            {{ employee.employeeId }}
+            {{ employee.id }}
           </span>
           <span class="font-semibold text-white md:ml-4 md:text-base">
-            {{ employee.employeeName }}
+            {{ employee.fullName }}
           </span>
-          <span
+          <!-- <span
             class="mt-1 inline-flex rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs text-white/70 md:ml-4 md:mt-0"
           >
             {{ employee.department }}
@@ -287,23 +287,21 @@
             class="mt-1 inline-flex rounded-full border border-emerald-400/30 bg-emerald-500/10 px-3 py-1 text-xs text-emerald-200 md:ml-3 md:mt-0"
           >
             {{ employee.role }}
-          </span>
+          </span> -->
         </div>
         <span
           class="text-xs uppercase tracking-[0.35em] text-white/40 transition"
-          [class.text-white]="expandedEmployeeId === employee.employeeId"
+          [class.text-white]="expandedEmployeeId === employee.id"
         >
-          {{ expandedEmployeeId === employee.employeeId ? "Hide" : "Details" }}
+          {{ expandedEmployeeId === employee.id ? "Hide" : "Details" }}
         </span>
       </button>
 
       <div
-        *ngIf="expandedEmployeeId === employee.employeeId"
+        *ngIf="expandedEmployeeId === employee.id"
         class="border-t border-white/10 px-6 py-6 text-sm text-white/75"
       >
-        <ng-container
-          *ngIf="editingEmployeeId === employee.employeeId; else viewMode"
-        >
+        <ng-container *ngIf="editingEmployeeId === employee.id; else viewMode">
           <form
             [formGroup]="employeeForm"
             class="grid gap-4 md:grid-cols-2"
@@ -312,12 +310,12 @@
           >
             <div class="md:col-span-1">
               <label
-                for="edit-name-{{ employee.employeeId }}"
+                for="edit-name-{{ employee.id }}"
                 class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/50"
                 >Employee name</label
               >
               <input
-                [id]="'edit-name-' + employee.employeeId"
+                [id]="'edit-name-' + employee.id"
                 type="text"
                 formControlName="employeeName"
                 class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/90 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
@@ -325,12 +323,12 @@
             </div>
             <div class="md:col-span-1">
               <label
-                for="edit-dept-{{ employee.employeeId }}"
+                for="edit-dept-{{ employee.id }}"
                 class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/50"
                 >Department</label
               >
               <input
-                [id]="'edit-dept-' + employee.employeeId"
+                [id]="'edit-dept-' + employee.id"
                 type="text"
                 formControlName="department"
                 class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/90 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
@@ -338,12 +336,12 @@
             </div>
             <div class="md:col-span-1">
               <label
-                for="edit-deptid-{{ employee.employeeId }}"
+                for="edit-deptid-{{ employee.id }}"
                 class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/50"
                 >Department ID</label
               >
               <input
-                [id]="'edit-deptid-' + employee.employeeId"
+                [id]="'edit-deptid-' + employee.id"
                 type="number"
                 formControlName="deptId"
                 class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/90 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
@@ -351,12 +349,12 @@
             </div>
             <div class="md:col-span-1">
               <label
-                for="edit-role-{{ employee.employeeId }}"
+                for="edit-role-{{ employee.id }}"
                 class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/50"
                 >Role</label
               >
               <input
-                [id]="'edit-role-' + employee.employeeId"
+                [id]="'edit-role-' + employee.id"
                 type="text"
                 formControlName="role"
                 class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/90 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
@@ -364,12 +362,12 @@
             </div>
             <div class="md:col-span-1">
               <label
-                for="edit-title-{{ employee.employeeId }}"
+                for="edit-title-{{ employee.id }}"
                 class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/50"
                 >Title</label
               >
               <input
-                [id]="'edit-title-' + employee.employeeId"
+                [id]="'edit-title-' + employee.id"
                 type="text"
                 formControlName="title"
                 class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/90 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
@@ -377,12 +375,12 @@
             </div>
             <div class="md:col-span-1">
               <label
-                for="edit-employment-{{ employee.employeeId }}"
+                for="edit-employment-{{ employee.id }}"
                 class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/50"
                 >Employment type</label
               >
               <input
-                [id]="'edit-employment-' + employee.employeeId"
+                [id]="'edit-employment-' + employee.id"
                 type="text"
                 formControlName="employmentType"
                 class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/90 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
@@ -390,12 +388,12 @@
             </div>
             <div class="md:col-span-1">
               <label
-                for="edit-phone-{{ employee.employeeId }}"
+                for="edit-phone-{{ employee.id }}"
                 class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/50"
                 >Contact number</label
               >
               <input
-                [id]="'edit-phone-' + employee.employeeId"
+                [id]="'edit-phone-' + employee.id"
                 type="tel"
                 formControlName="contactNo"
                 class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/90 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
@@ -403,12 +401,12 @@
             </div>
             <div class="md:col-span-1">
               <label
-                for="edit-email-{{ employee.employeeId }}"
+                for="edit-email-{{ employee.id }}"
                 class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/50"
                 >Email</label
               >
               <input
-                [id]="'edit-email-' + employee.employeeId"
+                [id]="'edit-email-' + employee.id"
                 type="email"
                 formControlName="emailId"
                 class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/90 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
@@ -416,12 +414,12 @@
             </div>
             <div class="md:col-span-1">
               <label
-                for="edit-location-{{ employee.employeeId }}"
+                for="edit-location-{{ employee.id }}"
                 class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/50"
                 >Location</label
               >
               <input
-                [id]="'edit-location-' + employee.employeeId"
+                [id]="'edit-location-' + employee.id"
                 type="text"
                 formControlName="location"
                 class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/90 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
@@ -429,12 +427,12 @@
             </div>
             <div class="md:col-span-1">
               <label
-                for="edit-timezone-{{ employee.employeeId }}"
+                for="edit-timezone-{{ employee.id }}"
                 class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/50"
                 >Timezone</label
               >
               <input
-                [id]="'edit-timezone-' + employee.employeeId"
+                [id]="'edit-timezone-' + employee.id"
                 type="text"
                 formControlName="timezone"
                 class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/90 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
@@ -442,12 +440,12 @@
             </div>
             <div class="md:col-span-1">
               <label
-                for="edit-hireDate-{{ employee.employeeId }}"
+                for="edit-hireDate-{{ employee.id }}"
                 class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/50"
                 >Hire Date</label
               >
               <input
-                [id]="'edit-hireDate-' + employee.employeeId"
+                [id]="'edit-hireDate-' + employee.id"
                 type="date"
                 formControlName="hireDate"
                 class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/90 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
@@ -455,12 +453,12 @@
             </div>
             <div class="md:col-span-1">
               <label
-                for="edit-skills-{{ employee.employeeId }}"
+                for="edit-skills-{{ employee.id }}"
                 class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/50"
                 >Skills</label
               >
               <input
-                [id]="'edit-skills-' + employee.employeeId"
+                [id]="'edit-skills-' + employee.id"
                 type="text"
                 formControlName="skills"
                 class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/90 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
@@ -468,12 +466,12 @@
             </div>
             <div class="md:col-span-1">
               <label
-                for="edit-tags-{{ employee.employeeId }}"
+                for="edit-tags-{{ employee.id }}"
                 class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/50"
                 >Tags</label
               >
               <input
-                [id]="'edit-tags-' + employee.employeeId"
+                [id]="'edit-tags-' + employee.id"
                 type="text"
                 formControlName="tags"
                 class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/90 outline-none transition focus:border-primary/60 focus:bg-white/10 focus:text-white"
@@ -510,7 +508,7 @@
                 Employee ID
               </p>
               <p class="mt-1 text-base font-semibold text-white">
-                {{ employee.employeeId }}
+                {{ employee.id }}
               </p>
             </div>
             <div
@@ -520,7 +518,7 @@
                 Department
               </p>
               <p class="mt-1 text-base font-semibold text-white">
-                {{ employee.department }}
+                {{ employee.departmentId }}
               </p>
             </div>
             <div
@@ -530,7 +528,7 @@
                 Department ID
               </p>
               <p class="mt-1 text-base font-semibold text-white">
-                {{ employee.deptId || '—' }}
+                {{ employee.departmentId || "—" }}
               </p>
             </div>
             <div
@@ -540,10 +538,10 @@
                 Role & Title
               </p>
               <p class="mt-1 text-base font-semibold text-white">
-                {{ employee.role || '—' }}
+                {{ employee.roleId || "—" }}
               </p>
               <p class="text-xs text-white/55">
-                {{ employee.title || '—' }}
+                {{ employee.email }}
               </p>
             </div>
             <div
@@ -553,7 +551,7 @@
                 Employment type
               </p>
               <p class="mt-1 text-base font-semibold text-white">
-                {{ employee.employmentType || '—' }}
+                {{ employee.contractType }}
               </p>
             </div>
             <div
@@ -563,42 +561,14 @@
                 Contact
               </p>
               <p class="mt-1 text-base font-semibold text-white">
-                {{ employee.contactNo || '—' }}
+                {{ employee.phone || "—" }}
               </p>
               <p class="text-xs text-white/55">
-                {{ employee.emailId || '—' }}
+                {{ employee.email || "—" }}
               </p>
             </div>
-            <div
-              class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3"
-            >
-              <p class="text-xs uppercase tracking-[0.3em] text-white/45">
-                Location
-              </p>
-              <p class="mt-1 text-base font-semibold text-white">
-                {{ employee.location || '—' }}
-              </p>
-              <p class="text-xs text-white/55">
-                {{ employee.timezone || '—' }}
-              </p>
-            </div>
-            <div
-              class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3"
-            >
-              <p class="text-xs uppercase tracking-[0.3em] text-white/45">
-                Hire Date
-              </p>
-              <p class="mt-1 text-base font-semibold text-white">
-                {{
-                  employee.hireDate
-                    ? (employee.hireDate | date: 'mediumDate')
-                    : (employee.createdAt
-                        ? (employee.createdAt | date: 'mediumDate')
-                        : '—')
-                }}
-              </p>
-            </div>
-            <div
+
+            <!-- <div
               class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 sm:col-span-2"
             >
               <p class="text-xs uppercase tracking-[0.3em] text-white/45">
@@ -611,8 +581,8 @@
                     : '—'
                 }}
               </p>
-            </div>
-            <div
+            </div> -->
+            <!-- <div
               class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 sm:col-span-2"
             >
               <p class="text-xs uppercase tracking-[0.3em] text-white/45">
@@ -625,7 +595,7 @@
                     : '—'
                 }}
               </p>
-            </div>
+            </div> -->
             <div class="sm:col-span-2 flex justify-end gap-3 pt-2">
               <button
                 type="button"
@@ -652,20 +622,30 @@
       class="rounded-[26px] border border-dashed border-white/15 bg-white/5/60 px-6 py-12 text-center text-sm text-white/60 backdrop-blur-lg"
     >
       No employees match your filters.
-  </div>
+    </div>
   </section>
-        </div>
+</div>
 
 <div
   *ngIf="pendingDelete as toDelete"
   class="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-950/70 px-4 py-4"
-  style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; overflow-y: auto; display: flex; align-items: center; justify-content: center;"
+  style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  "
 >
   <div
     class="w-full max-w-md rounded-3xl border border-white/15 bg-gradient-to-br from-slate-900/95 via-slate-900/85 to-slate-900/95 p-6 text-sm text-white shadow-[0_40px_120px_rgba(9,9,16,0.65)]"
   >
     <h2 class="text-lg font-semibold text-white">
-      Delete {{ toDelete.employeeName }}?
+      Delete {{ toDelete.fullName }}?
     </h2>
     <p class="mt-2 text-white/70">
       This action cannot be undone. The employee record will be permanently

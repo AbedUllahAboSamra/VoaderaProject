@@ -98,19 +98,19 @@ export class ApiStatusComponent implements OnInit {
   }
 
   loadApiStatus(): void {
-    this.loadingSignal.set(true);
-    this.errorSignal.set(null);
-    this.masterService.getApiStatus().subscribe({
-      next: (data: IApiStatus) => {
-        this.statusSignal.set(data);
-        this.loadingSignal.set(false);
-      },
-      error: (err) => {
-        console.error('Failed to load API status', err);
-        this.errorSignal.set('Failed to load API status. Please try again later.');
-        this.loadingSignal.set(false);
-      },
-    });
+    // this.loadingSignal.set(true);
+    // this.errorSignal.set(null);
+    // this.masterService.getApiStatus().subscribe({
+    //   next: (data: IApiStatus) => {
+    //     this.statusSignal.set(data);
+    //     this.loadingSignal.set(false);
+    //   },
+    //   error: (err) => {
+    //     console.error('Failed to load API status', err);
+    //     this.errorSignal.set('Failed to load API status. Please try again later.');
+    //     this.loadingSignal.set(false);
+    //   },
+    // });
   }
 
   setActiveTab(tab: 'overview' | 'endpoints' | 'performance' | 'activity'): void {

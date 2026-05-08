@@ -58,75 +58,75 @@ export class DashboardComponent implements OnInit {
   }
 
   getDashboardData() {
-    this.masterService.getDashboardData().subscribe((data: any) => {
-      this.dashboardData = data;
-    });
+    // this.masterService.getDashboardData().subscribe((data: any) => {
+    //   this.dashboardData = data;
+    // });
   }
 
   getParentDepartments() {
-    this.masterService.getAllDept().subscribe((response) => {
-      if (response?.result && Array.isArray(response.data)) {
-        this.parentDepartments = response.data;
-      } else if (Array.isArray(response)) {
-        // in case API returns array directly
-        this.parentDepartments = response as unknown as IParentDept[];
-      }
-    });
+    // this.masterService.getAllDept().subscribe((response) => {
+    //   if (response?.result && Array.isArray(response.data)) {
+    //     this.parentDepartments = response.data;
+    //   } else if (Array.isArray(response)) {
+    //     // in case API returns array directly
+    //     this.parentDepartments = response as unknown as IParentDept[];
+    //   }
+    // });
   }
 
   loadStatisticsData(): void {
-    let projectsLoaded = false;
-    let employeesLoaded = false;
-    let projectEmployeesLoaded = false;
+    // let projectsLoaded = false;
+    // let employeesLoaded = false;
+    // let projectEmployeesLoaded = false;
 
-    const checkAndCalculate = () => {
-      if (projectsLoaded && employeesLoaded && projectEmployeesLoaded) {
-        this.calculateProjectStatistics();
-      }
-    };
+    // const checkAndCalculate = () => {
+    //   if (projectsLoaded && employeesLoaded && projectEmployeesLoaded) {
+    //     this.calculateProjectStatistics();
+    //   }
+    // };
 
-    // Load projects, employees, and project-employees in parallel
-    this.masterService.getAllProjects().subscribe({
-      next: (projects) => {
-        this.projects = projects;
-        projectsLoaded = true;
-        checkAndCalculate();
-      },
-      error: (error) => {
-        console.error('[Dashboard] Failed to load projects', error);
-        this.projects = [];
-        projectsLoaded = true;
-        checkAndCalculate();
-      },
-    });
+    // // Load projects, employees, and project-employees in parallel
+    // this.masterService.getAllProjects().subscribe({
+    //   next: (projects) => {
+    //     this.projects = projects;
+    //     projectsLoaded = true;
+    //     checkAndCalculate();
+    //   },
+    //   error: (error) => {
+    //     console.error('[Dashboard] Failed to load projects', error);
+    //     this.projects = [];
+    //     projectsLoaded = true;
+    //     checkAndCalculate();
+    //   },
+    // });
 
-    this.masterService.getAllEmp().subscribe({
-      next: (employees) => {
-        this.employees = employees;
-        employeesLoaded = true;
-        checkAndCalculate();
-      },
-      error: (error) => {
-        console.error('[Dashboard] Failed to load employees', error);
-        this.employees = [];
-        employeesLoaded = true;
-        checkAndCalculate();
-      },
-    });
+    // this.masterService.getAllEmp().subscribe({
+    //   next: (employees) => {
+    //     this.employees = employees;
+    //     employeesLoaded = true;
+    //     checkAndCalculate();
+    //   },
+    //   error: (error) => {
+    //     console.error('[Dashboard] Failed to load employees', error);
+    //     this.employees = [];
+    //     employeesLoaded = true;
+    //     checkAndCalculate();
+    //   },
+    // });
 
-    this.masterService.getProjectEmp().subscribe({
-      next: (projectEmployees) => {
-        this.projectEmployees = projectEmployees;
-        projectEmployeesLoaded = true;
-        checkAndCalculate();
-      },
-      error: (error) => {
-        console.error('[Dashboard] Failed to load project employees', error);
-        this.projectEmployees = [];
-        projectEmployeesLoaded = true;
-        checkAndCalculate();
-      },
-    });
+    // this.masterService.getProjectEmp().subscribe({
+    //   next: (projectEmployees) => {
+    //     this.projectEmployees = projectEmployees;
+    //     projectEmployeesLoaded = true;
+    //     checkAndCalculate();
+    //   },
+    //   error: (error) => {
+    //     console.error('[Dashboard] Failed to load project employees', error);
+    //     this.projectEmployees = [];
+    //     projectEmployeesLoaded = true;
+    //     checkAndCalculate();
+    //   },
+    // });
   }
 
   calculateProjectStatistics(): void {
