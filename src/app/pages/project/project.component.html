@@ -18,6 +18,24 @@
           (input)="updateSearch($any($event.target).value)"
         />
       </div>
+      <div>
+        <label
+          class="mb-2 block text-xs uppercase tracking-[0.35em] text-white/60"
+        >
+          Department
+        </label>
+        <select
+          formControlName="department"
+          class="w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-sm text-white/90 outline-none transition focus:border-primary/60 focus:bg-slate-800 appearance-none"
+        >
+          <option value="all" [selected]="true">All Departments</option>
+          <option value="OA">OA</option>
+          <option value="AA">AA</option>
+          <option value="BC">BC</option>
+          <option value="CV">CV</option>
+          <option value="Kb">Kb</option>
+        </select>
+      </div>
     </div>
     <div class="flex flex-wrap items-center gap-3">
       <div
