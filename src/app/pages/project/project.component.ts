@@ -22,7 +22,7 @@
 // })
 // export class ProjectComponent implements OnInit {
 //   protected readonly routerLinkDirective = RouterLink;
-//   private readonly masterSrv = inject(MasterService);
+//   private readonly masterSrv = inject(MasterService);    
 //   private readonly datePipe = inject(DatePipe);
 //   private readonly toast = inject(ToastService);
 //   private readonly fb = inject(FormBuilder);
